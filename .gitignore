@@ -40,6 +40,7 @@ node_modules/
 zcheck/
 build/
 dist/
+doc/
 django_odk.egg-info
 
 

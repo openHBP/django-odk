@@ -10,8 +10,7 @@ register = template.Library()
 # settings value
 @register.simple_tag
 def settings_value(name):
-    allowed_keys = ('APP_NAME',
-                    'APP_VERSION',
+    allowed_keys = ('APP_VERSION',
                     'AVAILABLE_TXT',
                     'SUBMITTED_TXT',
                     'BASE_URL',

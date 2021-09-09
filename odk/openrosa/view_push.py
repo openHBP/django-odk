@@ -3,7 +3,7 @@ from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
 
-from config.settings import PROTOCOL
+from config.settings import USE_HTTPS
 from odk.models import XForm
 from odk.openrosa.utils_push import response_with_mimetype_and_name
 
@@ -18,6 +18,7 @@ def rosa_list(request):
     xforms = XForm.objects.all()
 
     # Prepare context to send back
+    PROTOCOL = 'https' if USE_HTTPS else 'http'
     context = {
         'host': f"{PROTOCOL}://{request.get_host()}",
         'object_list': xforms,

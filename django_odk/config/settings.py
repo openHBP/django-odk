@@ -43,7 +43,6 @@ AUTH_USER_MODEL = 'auth.user'
 DEBUG = True
 USE_HTTPS = False
 PROJECT_NAME = get_local_setting('PROJECT_NAME')
-APP_NAME = 'CP-ODK'
 AVAILABLE_TXT = 'Available form'
 SUBMITTED_TXT = 'Submitted form'
 ADMINS = [(item[0], item[1]) for item in get_local_setting('ADMINS')]

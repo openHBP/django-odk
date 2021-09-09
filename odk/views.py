@@ -25,8 +25,6 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-# from django.core.files.storage import default_storage
-from config.settings import APP_NAME
 
 from .storage import overwrite_storage
 from .models import XForm, XFormSubmit
@@ -40,7 +38,7 @@ LOG_DEBUG = logging.getLogger("mydebug")
 
 def home(request):
     pretitle = _("Welcome on")
-    title = f"{pretitle} {APP_NAME}"
+    title = f"{pretitle} django-odk"
     summary = _("Collection of geolocalized data.")
 
     return render(request, 'home.html', {'title': title, 'summary': summary})

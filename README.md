@@ -9,10 +9,37 @@ Django data collection tool using [ODK-collect](https://play.google.com/store/ap
 
 
 ## Installation
+Run
+
 ```bash
 $ pip install django-odk
 $ python manage.py migrate
 $ python manage.py createsuperuser
+```
+
+Add django_odk to your INSTALLED_APPS setting:
+
+```py
+INSTALLED_APPS = (
+    ...
+    'odk',
+)
+```
+
+Add the following variables to settings.py
+```py
+# django-odk app
+AVAILABLE_TXT = 'Available form'
+SUBMITTED_TXT = 'Submitted form'
+```
+
+Add odk.urls to the main urls.py file:
+
+```py
+urlpatterns = [
+    ...
+    path('odk/', include('odk.urls'), name='odk'),
+]
 ```
 
 ## Upload Xforms
