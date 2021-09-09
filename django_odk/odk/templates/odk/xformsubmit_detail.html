@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load i18n static model_tags %}
+
+
+{% block content_title %}<h3>{{ object.get_title }}</h3>{% endblock %}
+
+{% block content %}
+<ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="main-tab" data-bs-toggle="tab" data-bs-target="#main" type="button" role="tab" aria-controls="home" aria-selected="true">{% trans "Main" %}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#xml" type="button" role="tab" aria-controls="xml" aria-selected="false">{% trans "XML Content" %}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#modif" type="button" role="tab" aria-controls="modif" aria-selected="false">{% trans "Modifications" %}</button>
+    </li>    
+</ul>
+
+  
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+        {% include 'odk/_xformsubmit_detail_main.html' %}
+    </div>
+
+    <div class="tab-pane fade" id="xml" role="tabpanel" aria-labelledby="contact-tab">
+        <textarea name="xml_content" cols="100" rows="35" class="form-input">
+            {{ object.xml_content }}
+        </textarea>
+    </div>
+
+    <div class="tab-pane fade" id="modif" role="tabpanel" aria-labelledby="profile-tab">
+        {% include 'odk/_xformsubmit_detail_modif.html' %}
+    </div>
+</div>
+
+
+<a class="btn btn-primary m-2" href="{% url 'odk:xformsubmit_list' %}"><i class="fas fa-arrow-circle-left me-2"></i>{% trans 'Back' %}</a>
+
+{% endblock content %}

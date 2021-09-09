@@ -1,0 +1,38 @@
+{% load i18n model_tags %}
+<div class="mb-3 row">
+    <label for="xform_id" class="col-sm-2 form-label">{% get_verbose_field_name object "xform" %}</label>
+    <div id="xform_id" class="col-sm-10 form-input"><a href="{% url 'odk:xform_detail' object.xform.id %}" target="_blank">{{ object.xform }}</a></div>
+</div>
+<div class="mb-3 row">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "xml_file" %}</div>
+    <div class="col-sm-10 form-input"><a href="{{ object.xml_file.url }}" target="_blank">{{ object.xml_file.name }}</a></div>
+</div>
+
+<div class="mb-3 row text-danger">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "form_id" %}</div>
+    <div class="col-sm-10 form-input">{{ object.form_id }}</div>
+</div>
+<div class="mb-3 row text-danger">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "version" %}</div>
+    <div class="col-sm-10 form-input">{{ object.version }}</div>
+</div>
+<div class="mb-3 row text-danger">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "instanceid" %}</div>
+    <div class="col-sm-10 form-input">{{ object.instanceid }}</div>
+</div>
+<div class="mb-3 row">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "survey_date" %}</div>
+    <div class="col-sm-10 form-input">{{ object.survey_date }}</div>
+</div>
+
+{% for pic in object.picture_files %}
+<div class="mb-3 row">
+    <div class="col-sm-2 form-label">{% trans "Picture" %} {{forloop.counter}}</div>
+    <div class="col-sm-10 form-input"><a href="{{object.rm_xmlext_from_url}}{{pic}}" target="_blank">{{ pic }}</a></div>
+</div>
+{% endfor %}
+
+<div class="mb-3 row">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "deviceid" %}</div>
+    <div class="col-sm-10 form-input">{{ object.deviceid|default_if_none:"" }}</div>
+</div>

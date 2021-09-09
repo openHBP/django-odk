@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load i18n static model_tags %}
+
+{% block cssextra %}
+<style>
+textarea {
+    resize: both;
+}
+</style>
+{% endblock cssextra %}
+
+
+{% block content %}
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="main-tab" data-bs-toggle="tab" data-bs-target="#main" type="button" role="tab" aria-controls="home" aria-selected="true">{% trans "Main" %}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#xml" type="button" role="tab" aria-controls="xml" aria-selected="false">{% trans "XML Content" %}</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#modif" type="button" role="tab" aria-controls="modif" aria-selected="false">{% trans "Modifications" %}</button>
+    </li>    
+</ul>
+
+  
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="main" role="tabpanel" aria-labelledby="main-tab">
+        {% include 'odk/_xform_detail_main.html' %}
+    </div>
+    <div class="tab-pane fade" id="xml" role="tabpanel" aria-labelledby="contact-tab">
+        <textarea name="xml_content" cols="100" rows="35" class="form-input">
+            {{ object.xml_content }}
+        </textarea>
+    </div>
+
+    <div class="tab-pane fade" id="modif" role="tabpanel" aria-labelledby="profile-tab">
+        {% include 'odk/_xform_detail_modif.html' %}
+    </div>
+</div>
+
+
+<div class="m-2">
+    {% if user.is_authenticated %}
+
+    {% if "del" in request.path %}
+        <br />
+        <h4 class="text-danger">{{view.confirm_message}}</h4>
+        <form action="" method="post">{% csrf_token %}
+            <input type="submit" class="btn btn-primary m-1" value="Yes" />
+            <a class="btn btn-secondary m-1" href="{% url 'odk:xform_detail' object.id %}">{% trans 'No/Cancel' %}</a>
+        </form>
+    {% else %}
+        <a class="btn btn-primary" href="{% url 'odk:xform_add' %}">{% trans 'Add' %}</a>
+        <a class="btn btn-primary" href="{% url 'odk:xform_upd' object.id %}"><i class="fas fa-pencil-alt me-2"></i>{% trans 'Modify' %}</a>
+        <a class="btn btn-primary" href="{% url 'odk:xform_del' object.id %}"><i class="far fa-trash-alt me-2"></i>{% trans 'Delete' %}</a>
+        <a class="btn btn-primary" href="{% url 'odk:xform_list' %}"><i class="fas fa-arrow-circle-left me-2"></i>{% trans 'Back' %}</a>
+    {% endif %}
+    {% endif %}
+</div>
+
+{% endblock content %}

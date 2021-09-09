@@ -1,0 +1,45 @@
+# workspace files are user-specific
+.project
+.venv
+.vscode
+.pydevproject
+.settings/
+*workspace*
+
+# Basics
+*.py[cod]
+__pycache__
+.sass-cache
+db.sqlite3
+Pipfile.lock
+
+# Secret conf
+settings.json
+Pipfile.lock
+uwsgini*
+
+# Logs
+log
+*.log
+pip-log.txt
+npm-debug.log*
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+htmlcov
+
+# Translations
+*.mo
+*.pot
+
+# folder to be ignored
+media/
+node_modules/
+zcheck/
+build/
+dist/
+django_odk.egg-info
+
+

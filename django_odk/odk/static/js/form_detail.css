@@ -1,0 +1,32 @@
+/* -------------------------------------
+  FORM
+------------------------------------- */
+.tab-content {
+    margin-top: 0.5rem;
+}
+  
+.requiredfield {
+    color: red;
+}
+
+.requiredfield::after {
+    content: "*";
+    color: red;
+}
+
+.form-label {
+    font-weight: bold;
+    padding-left: 0px;
+    text-align: right;
+}
+
+.form-input {
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.75rem;
+    background-color: #e9ecef;
+}
+
+.form-input:empty {
+    padding: 1rem;
+}

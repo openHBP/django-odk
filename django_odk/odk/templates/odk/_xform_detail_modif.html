@@ -1,0 +1,15 @@
+{% load model_tags %}
+<div class="row mb-3">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "created_by" %}</div>
+    <div class="col-sm-4 form-input">{{ object.created_by }}</div>
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "created_on" %}</div>
+    <div class="col-sm-4 form-input">{{ object.created_on }}</div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "modified_by" %}</div>
+    <div class="col-sm-4 form-input">{{ object.modified_by }}</div>
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "modified_on" %}</div>
+    <div class="col-sm-4 form-input">{{ object.modified_on }}</div>
+</div>
+

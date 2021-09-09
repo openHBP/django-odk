@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n static model_tags %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+  {% if missing_in_db %}
+    <p class="text-danger">{% trans "Submitted forms not present in the database!" %}</p>
+    <ul>
+      {% for i in missing_in_db %}
+      <li>{{i}}</li>
+      {% endfor %}
+    </ul>
+    <p>{% trans "Click on load forms to load them in the database" %}
+    <a class="btn btn-primary mb-2" href="{% url 'odk:load_submitted' %}">
+        {% trans 'Load forms' %}
+    </a></p>
+  {% endif %}
+
+  {% if object_list %}
+    <table id="object_list" class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>{% get_verbose_field_name object_list "xml_file" %}</th>
+        <th>{% get_verbose_field_name object_list "form_id" %}</th>
+        <th>{% get_verbose_field_name object_list "version" %}</th>
+        <th>{% get_verbose_field_name object_list "submitted_on" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for i in object_list %}
+            <tr>
+            <td><a href="{{ i.get_absolute_url }}">{{ i.xml_file }}</a></td>
+            <td>{{ i.form_id }}</td>
+            <td>{{ i.version }}</td>
+            <td>{{ i.submitted_on }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+  {% else %}
+      <br/>
+      <h4>{% trans "No submitted forms yet." %}</h4>
+  {% endif %}
+
+{% else %}
+  <p>{% trans "Login to view submitted forms" %}</p>
+  <form class="form-inline ml-auto">
+    <a href="{% url 'admin:login' %}" class="btn btn-primary">{% trans "Login" %}</a>
+  </form>
+{% endif %}
+
+{% endblock %}

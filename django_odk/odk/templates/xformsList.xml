@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+{% load i18n %}
+<xforms xmlns="http://openrosa.org/xforms/xformsList">
+{% for xform in object_list %}
+  <xform>
+    <hash>{{ xform.hash }}</hash>
+    <formID>{{ xform.form_id }}</formID>
+    <name>{{ xform.title }}</name>
+    <majorMinorVersion/>
+    <version/>
+    <descriptionText>{{ xform.description }}</descriptionText>
+    <downloadUrl>{{ host }}/form/{{ xform.form_id }}</downloadUrl>
+  </xform>
+{% endfor %}
+</xforms>

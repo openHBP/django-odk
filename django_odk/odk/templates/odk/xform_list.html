@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load i18n static model_tags %}
+
+
+{% block content %}
+{% if user.is_authenticated %}
+  <p>
+    <a class="btn btn-primary m-1" href="{% url 'odk:xform_add' %}">{% trans "Add" %}</a>
+  </p>
+{% else %}
+  <p>{% trans "Login to add a form" %}</p>
+  <form class="form-inline ml-auto">
+    <a href="{% url 'admin:login' %}" class="btn btn-primary">{% trans "Login" %}</a>
+  </form>
+{% endif %}
+
+{% if object_list %}
+<table id="object_list" class="table table-bordered table-striped">
+<thead>
+  <tr>
+    <th>{% get_verbose_field_name object_list "xml_file" %}</th>
+    <th>{% get_verbose_field_name object_list "title" %}</th>
+    <th>{% get_verbose_field_name object_list "form_id" %}</th>
+    <th>{% get_verbose_field_name object_list "version" %}</th>
+  </tr>
+</thead>
+
+<tbody>
+    {% for i in object_list %}
+        <tr>
+        <td><a href="{{ i.get_absolute_url }}">{{ i.xml_file }}</a></td>
+        <td>{{ i.title }}</td>
+        <td>{{ i.form_id }}</td>
+        <td>{{ i.version }}</td>
+        </tr>
+    {% endfor %}
+</tbody>
+</table>
+{% else %}
+    <br/>
+    <h4>{% trans "No form available" %}</h4>
+{% endif %}
+{% endblock %}
