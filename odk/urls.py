@@ -21,7 +21,7 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('formList/', view_push.rosa_list, name='rosa_list'),
     path('form/<form_id>/', view_push.rosa_detail, name='rosa_detail'),
-    path('submission/', view_pull.xform_submit, name='rosa_submit'),
+    path('submission', view_pull.xform_submit, name='rosa_submit'),
 
     path('list/', views.XFormListView.as_view(), name='xform_list'),
     path('<int:pk>/', views.XFormDetailView.as_view(), name='xform_detail'),

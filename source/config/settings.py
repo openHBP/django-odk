@@ -47,7 +47,7 @@ AVAILABLE_TXT = 'Available form'
 SUBMITTED_TXT = 'Submitted form'
 ADMINS = [(item[0], item[1]) for item in get_local_setting('ADMINS')]
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "10.12.108.3"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "10.12.108.5"]
 
 PROTOCOL = 'https' if USE_HTTPS else "http"
 

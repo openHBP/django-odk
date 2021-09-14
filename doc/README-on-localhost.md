@@ -50,9 +50,14 @@ $ cd source
 ```bash
 ifconfig | grep "inet " | grep -v 127.0.0.1
 ```
-Keep this IP address for point B.2. Client connect
+Keep this IP address (ex: 10.12.108.3) for point B.2. Client connect
 
-### A.5. Launch site & login using superuser credentials
+### A.5. Add IP to ALLOWED_HOSTS in settings.py
+```py
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "10.12.108.3"]
+```
+
+### A.6. Launch site & login using superuser credentials
 ```bash
 (django-odk) $ python manage.py runserver 10.10.108.3:8000
 ```
@@ -105,9 +110,7 @@ Select those you want to download by clicking on 'Download empty forms' on ODK C
 Form edition and submission is quite intuitive. If you encounter some difficulties, follow [ODK documention](https://docs.getodk.org/collect-using/).
 
 ## D. Get back submitted data
-Got to Submitted form menu of your server to see submitted data
-
-## E. 
+Go to Submitted form menu of your server to see submitted data
 
 
 ---

@@ -51,8 +51,8 @@ textarea {
             <a class="btn btn-secondary m-1" href="{% url 'odk:xform_detail' object.id %}">{% trans 'No/Cancel' %}</a>
         </form>
     {% else %}
-        <a class="btn btn-primary" href="{% url 'odk:xform_add' %}">{% trans 'Add' %}</a>
-        <a class="btn btn-primary" href="{% url 'odk:xform_upd' object.id %}"><i class="fas fa-pencil-alt me-2"></i>{% trans 'Modify' %}</a>
+        <a class="btn btn-primary" href="{% url 'odk:xform_add' %}"><i class="fas fa-plus me-2"></i>{% trans 'Add' %}</a>
+        <a class="btn btn-primary" href="{% url 'odk:xform_upd' object.id %}"><i class="fas fa-pencil-alt me-2"></i>{% trans 'Edit' %}</a>
         <a class="btn btn-primary" href="{% url 'odk:xform_del' object.id %}"><i class="far fa-trash-alt me-2"></i>{% trans 'Delete' %}</a>
         <a class="btn btn-primary" href="{% url 'odk:xform_list' %}"><i class="fas fa-arrow-circle-left me-2"></i>{% trans 'Back' %}</a>
     {% endif %}

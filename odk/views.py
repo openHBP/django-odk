@@ -123,8 +123,14 @@ class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
 
 # @login_required(login_url='admin:login')
 def submittedfile_list(request):
+    subpath = overwrite_storage.path("XFormSubmit")
+    try:
+        os.mkdir(subpath)
+    except OSError as error:
+        pass
     dirs, file_list = overwrite_storage.listdir("XFormSubmit")
     file_set = set(file_list)
+
 
     object_list = XFormSubmit.objects.all()
     db_set = set(XFormSubmit.objects.all().values_list('xml_file', flat=True))

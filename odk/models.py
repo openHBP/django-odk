@@ -74,7 +74,7 @@ class XForm(models.Model):
     4. Copy-paste XML content generated in xml_content field
     => The file is ready to read in ODK Collect app
     """
-    xls_file = models.FileField(verbose_name=_("Excel file"), upload_to=xform_path, null=True,
+    xls_file = models.FileField(verbose_name=_("Excel file"), upload_to=xform_path, blank=True, null=True,
         help_text=_("XLSForm with 3 tabs: survey, choices, settings"))
     xml_file = models.FileField(verbose_name=_("XML file"), upload_to=xform_path,
         help_text=_("XLSForm traduit par <a href='https://getodk.org/xlsform/' target='_blank'>https://getodk.org/xlsform/</a>"))
@@ -333,7 +333,7 @@ class XFormSubmit(models.Model):
         self._set_xml_content()
         self._set_form_id()
         self._set_version()
-        self._set_today()
+        self._set_survey_date()
         self._set_username()
         self._set_deviceid()
         old_instanceid = self.instanceid

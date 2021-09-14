@@ -26,7 +26,7 @@ INSTALLED_APPS = (
 )
 ```
 
-Add the following variables to settings.py
+Add the following variables with appropriate language to settings.py
 ```py
 # django-odk app
 AVAILABLE_TXT = 'Available form'
@@ -34,12 +34,23 @@ SUBMITTED_TXT = 'Submitted form'
 ```
 
 Add odk.urls to the main urls.py file:
-
 ```py
 urlpatterns = [
     ...
     path('odk/', include('odk.urls'), name='odk'),
 ]
+```
+
+Add menu or buttons to access **Available form**
+```py
+# bootstrap5 menu item example
+<li><a class="dropdown-item" href="{% url 'odk:xform_list' %}">{% trans "ODK available forms" %}</a></li>
+```
+
+Add menu or buttons to access **Submitted form**
+```py
+# bootstrap5 menu item example
+<li><a class="dropdown-item" href="{% url 'odk:xformsubmit_list' %}">{% trans "ODK submitted forms" %}</a></li>
 ```
 
 ## Upload Xforms

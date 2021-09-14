@@ -2,7 +2,7 @@
 import os
 import logging
 
-from django.http import HttpResponse
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -39,9 +39,9 @@ def xform_submit(request, username=None):
         Status code = 204
         """
         response = BaseOpenRosaResponse(status=204)
-        # Keep base_url and add /submission/
+        # Keep base_url and add /submission
         response['Location'] = request.build_absolute_uri().replace(
-            request.get_full_path(), '/submission/')
+            request.get_full_path(), '/odk/submission')
         return response
         
     
@@ -72,7 +72,6 @@ def xform_submit(request, username=None):
         # Building response with XML template and data dict
         response = BaseOpenRosaResponse(loader.get_template('submission.xml').render(data))
         response.status_code = status_code
-        response['Location'] = request.build_absolute_uri(request.path)
 
     return response
 

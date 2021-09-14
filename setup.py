@@ -34,7 +34,7 @@ setup(
     author='Patrick HOUBEN',
     author_email='p.houben@cra.wallonie.be',
     license='GPL-3.0-or-later',
-    packages=['odk'],
+    packages=['odk', 'odk.openrosa'],
     # package_data={'static':['*'], 'templates':['*'], 'templatestags':['*'],},
     include_package_data=True,
     install_requires=REQUIREMENTS,

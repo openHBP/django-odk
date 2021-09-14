@@ -21,6 +21,6 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('odk.urls')),
+    path('odk/', include('odk.urls')),
     # path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

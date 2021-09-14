@@ -9,7 +9,7 @@
     <majorMinorVersion/>
     <version/>
     <descriptionText>{{ xform.description }}</descriptionText>
-    <downloadUrl>{{ host }}/form/{{ xform.form_id }}</downloadUrl>
+    <downloadUrl>{{ host }}/odk/form/{{ xform.form_id }}</downloadUrl>
   </xform>
 {% endfor %}
 </xforms>
