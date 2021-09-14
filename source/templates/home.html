@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static settings_tags %}
+
+{% block title %}{{title}}{% endblock title %}
+
+{% block content %}
+    <p class="bg-secondary text-white p-3">{{summary}}</p>
+
+    <p><a href="{% url 'odk:xform_list' %}" class="btn btn-primary">{% settings_value "AVAILABLE_TXT" %}</a></p>
+
+    <p><a href="{% url 'odk:xformsubmit_list' %}" class="btn btn-primary">{% settings_value "SUBMITTED_TXT" %}</a></p>
+
+{% endblock content %}
