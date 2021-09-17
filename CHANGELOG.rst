@@ -21,8 +21,9 @@ Changes
 0.2.0 (2021-09-17)
 ------------------
 
-* Remove dependancy on lxml
+* Remove dependency on lxml
 * Remove modifications on xml_content field
+* Rebuild initial migration
 * Add admin management
 * Add use of AUTH_USER_MODEL in settings.py
 * Add delete button on submitted forms
