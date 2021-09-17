@@ -2,11 +2,11 @@
 import re
 import os
 import logging
-from lxml import etree
+import xml.dom.minidom
+
 from hashlib import md5
 from datetime import datetime
 
-from django.utils import timezone
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.urls import reverse
@@ -39,6 +39,7 @@ def xform_path(instance, filename):
     )
     return my_xform_path
 
+
 def get_form_id(xml_content):
     """
     Search id attr in data tag
@@ -50,6 +51,7 @@ def get_form_id(xml_content):
     else:
         LOG.error(f"Unable to find 'id attr' of <data> tag in xml file")
         return 'ERROR'
+
 
 def get_version(xml_content):
     """
@@ -74,24 +76,59 @@ class XForm(models.Model):
     4. Copy-paste XML content generated in xml_content field
     => The file is ready to read in ODK Collect app
     """
-    xls_file = models.FileField(verbose_name=_("Excel file"), upload_to=xform_path, blank=True, null=True,
-        help_text=_("XLSForm with 3 tabs: survey, choices, settings"))
-    xml_file = models.FileField(verbose_name=_("XML file"), upload_to=xform_path,
-        help_text=_("XLSForm traduit par <a href='https://getodk.org/xlsform/' target='_blank'>https://getodk.org/xlsform/</a>"))
-    xml_content = models.TextField(verbose_name=_("Contenu du formulaire XML"))   
-    form_id = models.SlugField(editable=False, max_length=200,
-        help_text=_("Retrieved from XLSForm (settings tab)"))
-    version = models.CharField(editable=False, max_length=200,
-        help_text=_("Retrieved from XLSForm (settings tab)"))
-    title = models.CharField(verbose_name=_("Title"), editable=False, max_length=250,
-        help_text=_("Retrieved from XLSForm (settings tab)"))
-    short_desc = models.CharField(max_length=250, verbose_name=_("Short description"), blank=True)
-    created_by = models.ForeignKey(Profile, related_name="xform_created_by", 
-        on_delete=models.CASCADE, verbose_name=_("Created by"))
-    created_on = models.DateTimeField(auto_now_add=True, verbose_name=_("Created on"))
-    modified_by = models.ForeignKey(Profile, related_name="xform_modified_by", 
-        on_delete=models.CASCADE, verbose_name=_("Modified by"))
-    modified_on = models.DateTimeField(auto_now=True, verbose_name=_("Modified on"))    
+    xls_file = models.FileField(
+        verbose_name=_("Excel file"),
+        upload_to=xform_path,
+        blank=True, null=True,
+        help_text=_("XLSForm with 3 tabs: survey, choices, settings")
+    )
+    xml_file = models.FileField(
+        verbose_name=_("XML file"),
+        upload_to=xform_path,
+        help_text=_("""XLSForm converted by <a href='https://getodk.org/xlsform/' target='_blank'>https://getodk.org/xlsform/</a>""")
+    )
+    xml_content = models.TextField(
+        verbose_name=_("Contenu du formulaire XML")
+    )
+    form_id = models.SlugField(
+        editable=False,
+        max_length=200,
+        help_text=_("Retrieved from XLSForm (xls settings tab)")
+    )
+    version = models.CharField(
+        editable=False,
+        max_length=200,
+        help_text=_("Retrieved from XLSForm (xls settings tab)")
+    )
+    title = models.CharField(
+        verbose_name=_("Title"),
+        editable=False, max_length=250,
+        help_text=_("Retrieved from XLSForm (xls settings tab)")
+    )
+    short_desc = models.CharField(
+        max_length=250,
+        verbose_name=_("Short description"),
+        blank=True
+    )
+    created_by = models.ForeignKey(
+        Profile,
+        related_name="xform_created_by",
+        on_delete=models.CASCADE, verbose_name=_("Created by")
+    )
+    created_on = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_("Created on")
+    )
+    modified_by = models.ForeignKey(
+        Profile,
+        related_name="xform_modified_by",
+        on_delete=models.CASCADE,
+        verbose_name=_("Modified by")
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_("Modified on")
+    )
 
     class Meta:
         verbose_name = AVAILABLE_TXT
@@ -104,17 +141,17 @@ class XForm(models.Model):
         return self.__class__.__name__
 
     def _set_xml_content(self):
-        # with open(self.xml_file.path, 'r') as f:
-        #     self.xml_content = f.read()
-        x = etree.parse(self.xml_file.path)
-        self.xml_content = etree.tostring(x, pretty_print=True, encoding=str)
+        with open(self.xml_file.path, 'r') as f:
+            myxml = xml.dom.minidom.parseString(f.read())
+            self.xml_content = myxml.toprettyxml()
         return
 
     def _set_form_id(self):
         """
         Search over <instance> tag in xml content and store id
         """
-        my_regexp = re.compile(r'<instance>.*?id="([^"]+)".*</instance>', re.DOTALL)
+        my_regexp = re.compile(r'<instance>.*?id="([^"]+)".*</instance>',
+                               re.DOTALL)
         match = my_regexp.findall(self.xml_content)
         if match:
             self.form_id = match[0]
@@ -126,7 +163,8 @@ class XForm(models.Model):
         """
         Search over <instance> tag in xml content and store version
         """
-        my_regexp = re.compile(r'<instance>.*?version="([^"]+)".*</instance>', re.DOTALL)
+        my_regexp = re.compile(r'<instance>.*?version="([^"]+)".*</instance>',
+                               re.DOTALL)
         matches = my_regexp.findall(self.xml_content)
         if matches:
             self.version = matches[0]
@@ -164,7 +202,7 @@ class XForm(models.Model):
                 "Your updated form's form_id '%(new_id)s' must match "
                   "the existing forms' form_id '%(old_id)s'." %
                   {'new_id': self.form_id, 'old_id': old_form_id})
-        
+
         super(XForm, self).save(*args, **kwargs)
         return
 
@@ -183,7 +221,7 @@ class XForm(models.Model):
 
     @property
     def hash(self):
-        return u'%s' % md5(self.xml_content.encode('utf8')).hexdigest()        
+        return u'%s' % md5(self.xml_content.encode('utf8')).hexdigest()
 
 
 #############################################################
@@ -209,18 +247,6 @@ def get_survey_date(xml_content):
         return None
 
 
-def get_form_id(xml_content):
-    """
-    Search id attr in data tag
-    """
-    my_regexp = re.compile(r'<data.*id="([^"]+)"', re.DOTALL)
-    matches = my_regexp.findall(xml_content)
-    if matches:
-        return matches[0]
-    else:
-        LOG.error(f"Unable to find 'id attr' of <data> tag in xml file")
-        return 'ERROR'
-
 def get_instanceid(xml_content):
     """
     unique identifier per survey
@@ -229,31 +255,68 @@ def get_instanceid(xml_content):
     if matches:
         return matches[0]
     else:
-        LOG.error(f"Unable to find '<instanceID>uuid:' pattern in xml file")
+        LOG.error("Unable to find '<instanceID>uuid:' pattern in xml file")
         return None
+
 
 class XFormSubmit(models.Model):
     """
     Submitted files from ODK Collect
-    """    
-    xform = models.ForeignKey(XForm, on_delete=models.PROTECT, verbose_name="Template form", related_name="template_form")
-    form_id = models.SlugField(editable=False, max_length=200,
-        help_text=_("Retrieved from XML form (settings tab du fichier Excel)"))
-    version = models.CharField(editable=False, max_length=200,
-        help_text=_("Retrieved from XML form (settings tab du fichier Excel)"))
-    instanceid = models.UUIDField(unique=True)                   
-    deviceid = models.CharField(max_length=255, blank=True, null=True)
-    survey_date = models.DateField(verbose_name=_("Encoding date"), blank=True, null=True)
-    picture_files = models.JSONField(verbose_name=_("Picture file names"), blank=True, null=True)            
-    xml_file = models.FileField(verbose_name=SUBMITTED_TXT,
-        help_text=_("XML file sended through ODK Collect Mobile App"), blank=True)
-    xml_content = models.TextField(verbose_name=_("Content of XML file submitted"),
+    """
+    xform = models.ForeignKey(
+        XForm,
+        on_delete=models.PROTECT,
+        verbose_name="Template form",
+        related_name="template_form"
+    )
+    form_id = models.SlugField(
+        editable=False,
+        max_length=200,
+        help_text=_("Retrieved from XML form (settings tab du fichier Excel)")
+    )
+    version = models.CharField(
+        editable=False,
+        max_length=200,
+        help_text=_("Retrieved from XML form (settings tab du fichier Excel)")
+    )
+    instanceid = models.UUIDField(unique=True)
+    deviceid = models.CharField(
+        max_length=255,
+        blank=True, null=True
+    )
+    survey_date = models.DateField(
+        verbose_name=_("Encoding date"),
+        blank=True, null=True
+    )
+    picture_files = models.JSONField(
+        verbose_name=_("Picture file names"),
+        blank=True, null=True
+    )
+    xml_file = models.FileField(
+        verbose_name=SUBMITTED_TXT,
+        help_text=_("XML file sended through ODK Collect Mobile App"),
+        blank=True
+    )
+    xml_content = models.TextField(
+        verbose_name=_("Content of XML file submitted"),
         help_text=_("XML content sended through ODK Collect Mobile App")
     )
-    submitted_by = models.CharField(max_length=255, verbose_name=_("Submitted by"), blank=True, null=True)
-    submitted_on = models.DateTimeField(verbose_name=_("Submitted on"))
-    modified_by = models.CharField(max_length=255, verbose_name=_("Modified by"), blank=True, null=True)
-    modified_on = models.DateTimeField(auto_now=True, verbose_name=_("Modified on"))   
+    submitted_by = models.CharField(
+        max_length=255,
+        verbose_name=_("Submitted by"),
+        blank=True, null=True
+    )
+    submitted_on = models.DateTimeField(
+        verbose_name=_("Submitted on")
+    )
+    modified_by = models.CharField(
+        max_length=255,
+        verbose_name=_("Modified by"),
+        blank=True, null=True
+    )
+    modified_on = models.DateTimeField(
+        auto_now=True, verbose_name=_("Modified on")
+    )
 
     class Meta:
         verbose_name = SUBMITTED_TXT
@@ -274,8 +337,11 @@ class XFormSubmit(models.Model):
         return self.survey_date
 
     def _set_xml_content(self):
-        x = etree.parse(self.xml_file.path)
-        self.xml_content = etree.tostring(x, pretty_print=True, encoding=str)
+        with open(self.xml_file.path, 'r') as f:
+            myxml = xml.dom.minidom.parseString(f.read())
+            self.xml_content = myxml.toprettyxml()        
+        # x = etree.parse(self.xml_file.path)
+        # self.xml_content = etree.tostring(x, pretty_print=True, encoding=str)
         return
 
     def _set_form_id(self):
@@ -297,7 +363,7 @@ class XFormSubmit(models.Model):
                 self.modified_by = self.submitted_by
             return
         else:
-            LOG.warning(f"Unable to find '<username>' pattern in xml file")
+            LOG.warning("Unable to find '<username>' pattern in xml file")
             return
 
     def _set_deviceid(self):
@@ -306,7 +372,7 @@ class XFormSubmit(models.Model):
             self.deviceid = matches[0]
             return
         else:
-            LOG.warning(f"Unable to find '<deviceid>' pattern in xml file")
+            LOG.warning("Unable to find '<deviceid>' pattern in xml file")
             return
 
     def _set_instanceid(self):
@@ -339,13 +405,12 @@ class XFormSubmit(models.Model):
         old_instanceid = self.instanceid
         self._set_instanceid()
         # check if we have an existing instanceid,
-        # if so, the one must match but only if xform is NOT new
-        if self.pk and old_instanceid and old_instanceid != self.instanceid:
+        # if so, the one must match but only if xformsubmit is NOT new
+        if self.pk and old_instanceid and old_instanceid.__str__() != self.instanceid:
             raise Exception(
-                f"Your updated form's instanceid '{self.instanceid}' must match "
-                  "the existing forms' instanceid '{old_instanceid}'."
+                f"Your updated form's instanceid '{self.instanceid}' must match the existing forms' instanceid '{old_instanceid}'."
                   )
-        
+
         super(XFormSubmit, self).save(*args, **kwargs)
         return
 
@@ -355,18 +420,5 @@ class XFormSubmit(models.Model):
     def get_title(self):
         return self._meta.verbose_name
 
-    # @property
-    # def sub_folder(self):
-    #     form_id = getattr(self, 'form_id', '')
-    #     version = getattr(self, 'version', '')
-    #     survey_date = getattr(self, 'survey_date', '')
-    #     return f"{form_id}_{version}_{survey_date}"
-
     def __str__(self):
-        # instanceid = getattr(self, 'instanceid', '')
-        # form_id = getattr(self, 'form_id', '')
-        # version = getattr(self, 'version', '')
-        # mykey = f"{form_id}-{version}-{instanceid}"
         return self.xml_file.name
-
-

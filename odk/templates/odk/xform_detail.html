@@ -29,7 +29,7 @@ textarea {
         {% include 'odk/_xform_detail_main.html' %}
     </div>
     <div class="tab-pane fade" id="xml" role="tabpanel" aria-labelledby="contact-tab">
-        <textarea name="xml_content" cols="100" rows="35" class="form-input">
+        <textarea name="xml_content" cols="100" rows="35" class="form-input" readonly="true">
             {{ object.xml_content }}
         </textarea>
     </div>

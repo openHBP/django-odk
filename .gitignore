@@ -35,6 +35,7 @@ htmlcov
 *.pot
 
 # folder to be ignored
+source/
 media/
 node_modules/
 zcheck/

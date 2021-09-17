@@ -3,9 +3,8 @@
 import os
 import re
 import logging
-# External
+# import xml.dom.minidom
 from datetime import datetime
-from lxml import etree
 # Django
 from django.utils.translation import ugettext as _
 from django.db import IntegrityError
@@ -37,10 +36,6 @@ class ManageFile(object):
     """
     Abstract class for XML file read & save
     and data insert/update in XForm & XFormSubmit tables
-    Steps
-    1. instanciate
-    2. save
-    3. insert_submitted_data
     """
     request = None
     xml_content = ''
@@ -48,7 +43,6 @@ class ManageFile(object):
     version = ''
     xml_file = ''
     xml_filename = ''
-    # pic_path = []
     xform = None
 
     def __init__(self, request):
@@ -66,16 +60,12 @@ class ManageFile(object):
             msg = self.set_key_elements()
             if msg == 'OK':
                 msg = self.save_file(file_key='xml_template_file', class_name='XForm')
-                # print(f"save_file: {msg}")
                 if msg == 'OK':
                     msg = self.get_xform_pk(class_name='XForm')
-                    # print(f"get_form_pk: {msg}")
                     if msg == 'NOT_FOUND':
-                        msg, instance = self.insert_in_xform()
-                        # print(f"insert: {msg}")                             
+                        msg, instance = self.insert_in_xform()                           
                     if msg == 'FOUND':
                         msg, instance = self.update_in_xform()
-                        # print(f"upd: {msg}") 
 
         return msg, instance
 
@@ -200,6 +190,8 @@ class ManageFile(object):
         Must be last fucntion call!
         """
         try:
+            # myxml = xml.dom.minidom.parseString(self.xml_content)
+            # xml_pretty_str = myxml.toprettyxml()
             picture_files = get_submitted_picture(self.xml_content, f'pic_img')
             modified_on = overwrite_storage.get_modified_time(self.xml_file)
             submitted_on = overwrite_storage.get_created_time(self.xml_file)
@@ -207,8 +199,7 @@ class ManageFile(object):
             try:
                 xsub = XFormSubmit.objects.get(instanceid=instanceid)
                 # Update
-                # xsub.xform=self.xform,
-                # xsub.xml_file=self.xml_file,
+                # xsub.xml_content=xml_pretty_str, # done in models.py
                 xsub.picture_files = picture_files,
                 xsub.modified_on = modified_on
                 xsub.submitted_on = submitted_on
@@ -218,12 +209,13 @@ class ManageFile(object):
                 xsub = XFormSubmit.objects.create(
                     xform=self.xform,
                     xml_file=self.xml_file,
+                    # xml_content=xml_pretty_str, # done in models.py
                     picture_files=picture_files,
                     submitted_on=submitted_on,
                     modified_on=modified_on
                 )
             
-            pathname = self.xml_file.name
+            pathname = self.xml_file
             lastslash = pathname.rfind('/')
             fname = pathname[lastslash+1:]
             msg = f'fichier {fname} submitted!'
@@ -270,9 +262,11 @@ class ManageFile(object):
         out: XForm instance
         """
         try:
+            # myxml = xml.dom.minidom.parseString(self.xml_content)
+            # xml_pretty_str = myxml.toprettyxml()
             obj = XForm.objects.create(
                 xml_file=self.xml_file,
-                # xml_content=self.xml_content,
+                # xml_content=xml_pretty_str, # done in models.py
                 created_by=self.request.user,
                 modified_by=self.request.user
             )

@@ -30,6 +30,7 @@ urlpatterns = [
     path('<int:pk>/del', views.XFormDelView.as_view(), name='xform_del'),
 
     path('submitted/', views.submittedfile_list, name='xformsubmit_list'),    
-    path('submitted/load/', views.load_submittedfiles, name='load_submitted'),
-    path('submitted/<int:pk>/', views.XFormSubmitDetailView.as_view(), name='xformsubmit_detail'),    
+    # path('submitted/load/', views.load_submittedfiles, name='load_submitted'),
+    path('submitted/<int:pk>/', views.XFormSubmitDetailView.as_view(), name='xformsubmit_detail'),
+    path('submitted/<int:pk>/del', views.XFormSubmitDelView.as_view(), name='xformsubmit_del'),    
 ]

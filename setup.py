@@ -9,7 +9,6 @@ with open("README.md", "r") as fh:
 REQUIREMENTS = [
     'django>=2.2,<4.0',
     'django-braces>=1.11,<2.0',
-    'lxml>=4.4.0,<4.9.0',
 ]
 
 CLASSIFIERS=[

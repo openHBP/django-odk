@@ -146,23 +146,57 @@ def submittedfile_list(request):
     return render(request, 'odk/xformsubmit_list.html', context)
 
 
-@login_required(login_url='admin:login')
-def load_submittedfiles(request):
-    """
-    TO_DO: check wether picture can be readed here...
-    """
-    dirs, file_list = overwrite_storage.listdir("XFormSubmit")
+class XFormSubmitDelView(LoginRequiredMixin, generic.DeleteView):
+    model = XFormSubmit
+    template_name = "odk/xformsubmit_detail.html"
+    confirm_message = _("Delete this submitted form?")
+    success_url = reverse_lazy("odk:xformsubmit_list")
 
-    for f in file_list:
-        filepath = os.path.join("XFormSubmit", f)
-        modified_on = overwrite_storage.get_modified_time(filepath)
-        submitted_on = overwrite_storage.get_created_time(filepath)
+    def delete(self, request, *args, **kwargs):
+        """
+        On delete rm file
+        """
+        self.object = self.get_object()
+        
+        filePath = self.object.xml_file.path
+        try:
+            os.remove(filePath) # rm xml
+        except:
+            pass
 
-        obj = XFormSubmit.objects.create(
-            xml_file=filepath, 
-            submitted_on=submitted_on,
-            modified_on=modified_on
-        )
+        import glob
+        filePictureDir = filePath.replace('.xml', '')
+        pictures = glob.glob(f"{filePictureDir}/*", recursive=True)
+        for pic in pictures:
+            try:
+                os.remove(pic)
+            except OSError as xcpt:
+                # msg = f"Error {xcpt} while deleting picture {pic}"
+                # LOG.error(msg)
+                return render(request, "500.html", {"error_msg": xcpt})
+        os.rmdir(filePictureDir)
 
-    return redirect('odk:xformsubmit_list')
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
+# @login_required(login_url='admin:login')
+# def load_submittedfiles(request):
+#     """
+#     TO_DO: check wether picture can be read here...
+#     """
+#     dirs, file_list = overwrite_storage.listdir("XFormSubmit")
+
+#     for f in file_list:
+#         filepath = os.path.join("XFormSubmit", f)
+#         modified_on = overwrite_storage.get_modified_time(filepath)
+#         submitted_on = overwrite_storage.get_created_time(filepath)
+
+#         obj = XFormSubmit.objects.create(
+#             xml_file=filepath, 
+#             submitted_on=submitted_on,
+#             modified_on=modified_on
+#         )
+
+#     return redirect('odk:xformsubmit_list')
   

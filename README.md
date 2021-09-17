@@ -33,6 +33,11 @@ AVAILABLE_TXT = 'Available form'
 SUBMITTED_TXT = 'Submitted form'
 ```
 
+Add also appropriate AUTH_USER_MODEL in settings.py
+```py
+AUTH_USER_MODEL = 'auth.user'
+```
+
 Add odk.urls to the main urls.py file:
 ```py
 urlpatterns = [
