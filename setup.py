@@ -11,7 +11,7 @@ REQUIREMENTS = [
     'django-braces>=1.11,<2.0',
 ]
 
-CLASSIFIERS=[
+CLASSIFIERS = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
     'Topic :: Software Development',
@@ -25,7 +25,7 @@ CLASSIFIERS=[
 
 setup(
     name='django-odk',
-    version=odk.__version__,   
+    version=odk.__version__,
     description='Django Data Collection tool using ODK Collect mobile App',
     long_description=long_description,
     long_description_content_type='text/markdown',

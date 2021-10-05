@@ -27,3 +27,9 @@ Changes
 * Add admin management
 * Add use of AUTH_USER_MODEL in settings.py
 * Add delete button on submitted forms
+
+0.2.1 (2021-10-05)
+------------------
+
+* Add migrations on PyPi
+* Add is_odk_admin property on user model

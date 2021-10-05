@@ -9,7 +9,7 @@ Django data collection tool using [ODK-collect](https://play.google.com/store/ap
 
 
 ## Installation
-Run
+* Run
 
 ```bash
 $ pip install django-odk
@@ -17,7 +17,7 @@ $ python manage.py migrate
 $ python manage.py createsuperuser
 ```
 
-Add django_odk to your INSTALLED_APPS setting:
+* Add django_odk to your INSTALLED_APPS setting:
 
 ```py
 INSTALLED_APPS = (
@@ -26,19 +26,26 @@ INSTALLED_APPS = (
 )
 ```
 
-Add the following variables with appropriate language to settings.py
+* Add the following variables with appropriate language to settings.py
 ```py
 # django-odk app
 AVAILABLE_TXT = 'Available form'
 SUBMITTED_TXT = 'Submitted form'
 ```
 
-Add also appropriate AUTH_USER_MODEL in settings.py
+* Add also appropriate AUTH_USER_MODEL in settings.py
 ```py
 AUTH_USER_MODEL = 'auth.user'
 ```
 
-Add odk.urls to the main urls.py file:
+* Add **is_odk_admin** property to your AUTH_USER_MODEL (django.contrib.auth.models file):
+```py
+    @property
+    def is_odk_admin(self):
+        return self.groups.filter(name='odk-admin').exists()
+```
+
+* Add odk.urls to the main urls.py file:
 ```py
 urlpatterns = [
     ...
@@ -46,17 +53,20 @@ urlpatterns = [
 ]
 ```
 
-Add menu or buttons to access **Available form**
+* Add menu or buttons to access **Available form**
 ```py
 # bootstrap5 menu item example
 <li><a class="dropdown-item" href="{% url 'odk:xform_list' %}">{% trans "ODK available forms" %}</a></li>
 ```
 
-Add menu or buttons to access **Submitted form**
+* Add menu or buttons to access **Submitted form**
 ```py
 # bootstrap5 menu item example
 <li><a class="dropdown-item" href="{% url 'odk:xformsubmit_list' %}">{% trans "ODK submitted forms" %}</a></li>
 ```
+
+Once ODK is up and running, go to admin interface and 
+* create a group 'odk-admin' with create, read, update access on odk objects
 
 ## Upload Xforms
 Connect to django-odk => **Available form** => Add and follow instructions to upload xml forms
