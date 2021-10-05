@@ -37,8 +37,7 @@ LOG_DEBUG = logging.getLogger("mydebug")
 
 
 def home(request):
-    pretitle = _("Welcome on")
-    title = f"{pretitle} django-odk"
+    title = _("Welcome on django-odk")
     summary = _("Collection of geolocalized data.")
 
     return render(request, 'home.html', {'title': title, 'summary': summary})
@@ -140,7 +139,7 @@ def submittedfile_list(request):
     context = {
         'object_list': object_list,
         'missing_in_db': missing_in_db,
-        'title': XFormSubmit._meta.verbose_name_plural
+        'title': XFormSubmit._meta.verbose_name
     }
 
     return render(request, 'odk/xformsubmit_list.html', context)

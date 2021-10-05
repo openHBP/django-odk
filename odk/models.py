@@ -12,8 +12,6 @@ from django.utils.translation import ugettext as _
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
-from config.settings import AVAILABLE_TXT, SUBMITTED_TXT
-
 Profile = get_user_model()
 
 __author__ = 'jean pierre huart, patrick houben'
@@ -85,10 +83,10 @@ class XForm(models.Model):
     xml_file = models.FileField(
         verbose_name=_("XML file"),
         upload_to=xform_path,
-        help_text=_("""XLSForm converted by <a href='https://getodk.org/xlsform/' target='_blank'>https://getodk.org/xlsform/</a>""")
+        help_text="XLSForm "+_("converted by")+" <a href='https://getodk.org/xlsform/' target='_blank'>https://getodk.org/xlsform/</a>"
     )
     xml_content = models.TextField(
-        verbose_name=_("Contenu du formulaire XML")
+        verbose_name=_("Content of XML form")
     )
     form_id = models.SlugField(
         editable=False,
@@ -131,8 +129,7 @@ class XForm(models.Model):
     )
 
     class Meta:
-        verbose_name = AVAILABLE_TXT
-        verbose_name_plural = AVAILABLE_TXT
+        verbose_name = _("Available form")
         unique_together = ('form_id', 'version')
         ordering = ('xml_file',)
 
@@ -272,12 +269,12 @@ class XFormSubmit(models.Model):
     form_id = models.SlugField(
         editable=False,
         max_length=200,
-        help_text=_("Retrieved from XML form (settings tab du fichier Excel)")
+        help_text=_("Retrieved from XML form (settings tab of Excel file)")
     )
     version = models.CharField(
         editable=False,
         max_length=200,
-        help_text=_("Retrieved from XML form (settings tab du fichier Excel)")
+        help_text=_("Retrieved from XML form (settings tab of Excel file)")
     )
     instanceid = models.UUIDField(unique=True)
     deviceid = models.CharField(
@@ -293,7 +290,7 @@ class XFormSubmit(models.Model):
         blank=True, null=True
     )
     xml_file = models.FileField(
-        verbose_name=SUBMITTED_TXT,
+        verbose_name=_('Submitted form'),
         help_text=_("XML file sended through ODK Collect Mobile App"),
         blank=True
     )
@@ -319,8 +316,7 @@ class XFormSubmit(models.Model):
     )
 
     class Meta:
-        verbose_name = SUBMITTED_TXT
-        verbose_name_plural = SUBMITTED_TXT
+        verbose_name = _("Submitted form")
         # unique_together = ('form_id', 'version', 'instanceid')
         ordering = ('submitted_on',)
 

@@ -13,6 +13,7 @@ from odk.utils import ManageFile
 
 LOG_DEBUG = logging.getLogger("mydebug")
 
+
 class BaseOpenRosaResponse(HttpResponse):
     """
     OpenRosa settings
@@ -20,10 +21,10 @@ class BaseOpenRosaResponse(HttpResponse):
     status_code = 201
     def __init__(self, *args, **kwargs):
         super(BaseOpenRosaResponse, self).__init__(*args, **kwargs)
-        self.headers['X-OpenRosa-Version'] = '1.0'
-        self.headers['Date'] = timezone.now().strftime('%a, %d %b %Y %H:%M:%S %Z')
-        self.headers['X-OpenRosa-Accept-Content-Length'] = 10000000
-        self.headers['Content-Type'] = 'text/xml; charset=utf-8'
+        self.setdefault('X-OpenRosa-Version', '1.0')
+        self.setdefault('Date', timezone.now().strftime('%a, %d %b %Y %H:%M:%S %Z'))
+        self.setdefault('X-OpenRosa-Accept-Content-Length', 10000000)
+        self.setdefault('Content-Type', 'text/xml; charset=utf-8')
 
 
 @csrf_exempt

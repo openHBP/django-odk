@@ -17,8 +17,7 @@ $ python manage.py migrate
 $ python manage.py createsuperuser
 ```
 
-* Add django_odk to your INSTALLED_APPS setting:
-
+* Add django_odk to your INSTALLED_APPS settings
 ```py
 INSTALLED_APPS = (
     ...
@@ -26,24 +25,28 @@ INSTALLED_APPS = (
 )
 ```
 
-* Add the following variables with appropriate language to settings.py
+* Add LOCALE_PATHS and appropriate language_code in settings
+
 ```py
-# django-odk app
-AVAILABLE_TXT = 'Available form'
-SUBMITTED_TXT = 'Submitted form'
+LOCALE_PATHS = [os.path.join(BASE_DIR, 'odk', 'locale')]
+
+LANGUAGE_CODE = 'en'
+# LANGUAGE_CODE = 'fr'
+# possible LANGUAGE_CODE on 05/10/2021 are: en, fr
 ```
 
-* Add also appropriate AUTH_USER_MODEL in settings.py
+* Add appropriate AUTH_USER_MODEL in settings.py
 ```py
 AUTH_USER_MODEL = 'auth.user'
 ```
 
-* Add **is_odk_admin** property to your AUTH_USER_MODEL (django.contrib.auth.models file):
+* Add **is_odk_admin** property to your AUTH_USER_MODEL (django.contrib.auth.models file or specific accounts.models)
 ```py
     @property
     def is_odk_admin(self):
         return self.groups.filter(name='odk-admin').exists()
 ```
+
 
 * Add odk.urls to the main urls.py file:
 ```py
@@ -65,8 +68,9 @@ urlpatterns = [
 <li><a class="dropdown-item" href="{% url 'odk:xformsubmit_list' %}">{% trans "ODK submitted forms" %}</a></li>
 ```
 
-Once ODK is up and running, go to admin interface and 
+## Connect to the Django admin site
 * create a group 'odk-admin' with create, read, update access on odk objects
+* Associate this group to the appropriate users
 
 ## Upload Xforms
 Connect to django-odk => **Available form** => Add and follow instructions to upload xml forms

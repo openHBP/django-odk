@@ -33,3 +33,10 @@ Changes
 
 * Add migrations on PyPi
 * Add is_odk_admin property on user model
+
+0.2.2 (2021-10-05)
+------------------
+
+* Add locale fr
+* Remove AVAILABLE_TXT and SUBMITTED_TXT from settings
+* Replace self.headers by self.setdefault in odk.openrosa.view_pull
