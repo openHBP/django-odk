@@ -30,3 +30,17 @@
 .form-input:empty {
     padding: 1rem;
 }
+/* -------------------------------------
+    BUTTONS
+------------------------------------- */
+.btn-main2 {
+    color: white;
+    background-color: #6287a2;
+    border-color: #6287a2;
+    padding: 6px 14px;
+  }
+  .btn-main2:hover, .btn-main2:focus {
+    background-color: #3b5263;
+    border-color: #3b5263;
+    color: white;
+  }

@@ -5,9 +5,10 @@
 
 {% block content %}
     <p class="bg-secondary text-white p-3">{{summary}}</p>
-
-    <p><a href="{% url 'odk:xform_list' %}" class="btn btn-primary">{% trans "Formulaire disponible" %}</a></p>
-
-    <p><a href="{% url 'odk:xformsubmit_list' %}" class="btn btn-primary">{% trans "Formulaire soumis" %}</a></p>
+    <div class="btn-group-vertical">
+        <a href="{% url 'odk:xform_list' %}" class="btn btn-main2">{% trans "Available form" %}</a>
+        <br> 
+        <a href="{% url 'odk:xformsubmit_list' %}" class="btn btn-main2">{% trans "Submitted form" %}</a>
+    </div>
 
 {% endblock content %}

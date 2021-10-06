@@ -40,3 +40,9 @@ Changes
 * Add locale fr
 * Remove AVAILABLE_TXT and SUBMITTED_TXT from settings
 * Replace self.headers by self.setdefault in odk.openrosa.view_pull
+
+0.2.3 (2021-10-06)
+------------------
+
+* Adapt locale fr
+* Launch migration in EN
