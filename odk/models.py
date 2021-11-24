@@ -260,12 +260,12 @@ class XFormSubmit(models.Model):
     """
     Submitted files from ODK Collect
     """
-    xform = models.ForeignKey(
-        XForm,
-        on_delete=models.PROTECT,
-        verbose_name="Template form",
-        related_name="template_form"
-    )
+    # xform = models.ForeignKey(
+    #     XForm,
+    #     on_delete=models.PROTECT,
+    #     verbose_name="Template form",
+    #     related_name="template_form"
+    # )
     form_id = models.SlugField(
         editable=False,
         max_length=200,

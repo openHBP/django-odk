@@ -5,8 +5,8 @@
 {% block content %}
 {% if user.is_authenticated %}
   {% if user.is_odk_admin %}
-    <p><a class="btn btn-main2 m-1" href="{% url 'odk:xform_add' %}">{% trans "Add" %}</a></p>
-  {% endif %} 
+  <p><a class="btn btn-main2 m-1" href="{% url 'odk:xform_add' %}">{% trans "Add" %}</a></p>
+  {% endif %}
 {% else %}
   <p>{% trans "Login to add a form" %}</p>
   <form class="form-inline ml-auto mb-3">

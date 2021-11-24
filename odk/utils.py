@@ -79,14 +79,14 @@ class ManageFile(object):
         msg = self.read_xml(file_key='xml_submission_file')
         if msg == 'OK':
             msg = self.set_key_elements()
-            if msg == 'OK':
-                msg = self.get_xform_pk(class_name='XFormSubmit')
-                if msg == 'FOUND':
-                    msg = self.save_file(file_key='xml_submission_file', class_name='XFormSubmit')
+            # if msg == 'OK':
+            #     msg = self.get_xform_pk(class_name='XFormSubmit')
+            if msg == 'FOUND':
+                msg = self.save_file(file_key='xml_submission_file', class_name='XFormSubmit')
+                if msg == 'OK':
+                    msg = self.save_pictures()
                     if msg == 'OK':
-                        msg = self.save_pictures()
-                        if msg == 'OK':
-                            msg, instance = self.insert_in_xformsubmit()                      
+                        msg, instance = self.insert_in_xformsubmit()                      
 
         return msg, instance
 

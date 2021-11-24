@@ -46,3 +46,8 @@ Changes
 
 * Adapt locale fr
 * Launch migration in EN
+
+0.2.4 (2021-11-24)
+------------------
+
+* rm xform FK from submit model
