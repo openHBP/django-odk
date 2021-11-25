@@ -79,9 +79,9 @@ class ManageFile(object):
         msg = self.read_xml(file_key='xml_submission_file')
         if msg == 'OK':
             msg = self.set_key_elements()
-            # if msg == 'OK':
-            #     msg = self.get_xform_pk(class_name='XFormSubmit')
-            if msg == 'FOUND':
+            if msg == 'OK':
+                # msg = self.get_xform_pk(class_name='XFormSubmit')
+                # if msg == 'FOUND':
                 msg = self.save_file(file_key='xml_submission_file', class_name='XFormSubmit')
                 if msg == 'OK':
                     msg = self.save_pictures()
@@ -207,7 +207,7 @@ class ManageFile(object):
             except XFormSubmit.DoesNotExist:
                 # Insert
                 xsub = XFormSubmit.objects.create(
-                    xform=self.xform,
+                    # xform=self.xform,
                     xml_file=self.xml_file,
                     # xml_content=xml_pretty_str, # done in models.py
                     picture_files=picture_files,

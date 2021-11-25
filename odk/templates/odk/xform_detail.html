@@ -46,7 +46,7 @@ textarea {
         <br />
         <h4 class="text-danger">{{view.confirm_message}}</h4>
         <form action="" method="post">{% csrf_token %}
-            <input type="submit" class="btn btn-main2 m-1" value="Yes" />
+            <button type="submit" class="btn btn-main2 m-1">{% trans 'Yes' %}</button>
             <a class="btn btn-secondary m-1" href="{% url 'odk:xform_detail' object.id %}">{% trans 'No/Cancel' %}</a>
         </form>
     {% else %}

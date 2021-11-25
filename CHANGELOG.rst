@@ -51,3 +51,9 @@ Changes
 ------------------
 
 * rm xform FK from submit model
+
+0.2.5 (2021-11-25)
+------------------
+
+* rm xform from html
+* change input type submit to button type
