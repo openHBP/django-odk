@@ -218,7 +218,7 @@ class XForm(models.Model):
 
     @property
     def hash(self):
-        return u'%s' % md5(self.xml_content.encode('utf8')).hexdigest()
+        return u'md5:%s' % md5(self.xml_content.encode('utf8')).hexdigest()
 
 
 #############################################################

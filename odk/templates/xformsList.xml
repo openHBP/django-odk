@@ -6,7 +6,6 @@
     <hash>{{ xform.hash }}</hash>
     <formID>{{ xform.form_id }}</formID>
     <name>{{ xform.title }}</name>
-    <majorMinorVersion/>
     <version/>
     <descriptionText>{{ xform.description }}</descriptionText>
     <downloadUrl>{{ host }}/odk/form/{{ xform.form_id }}</downloadUrl>
