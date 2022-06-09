@@ -84,5 +84,22 @@ Once it is done, you are ready to go with form encoding on your smartphone!
 ## Get submitted data on server
 Go to **Submitted form** menu of your server to see submitted data
 
+# Further notes (new release objective)
 
+## Convert XLSForm (xlsx) to xml on the fly
+Cfr. https://github.com/XLSForm/pyxform
+Once your virtualenv is activated and **pyxform** installed, run
+```sh
+xls2xform "/var/www/app/media/XForm/pdt.xlsx" "pdt.xml"
+```
+It will generate the XML form for ODK-Collect
+
+## Convert XML to python model
+Cfr. https://github.com/wq/xlsform-converter
+
+Once your virtualenv is activated and **xlsconv** installed, run
+```sh
+xls2django my-odk-survey.xls > myapp/models.py
+```
+It will generate the target model automatically!
 
