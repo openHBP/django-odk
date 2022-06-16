@@ -18,7 +18,7 @@ import logging
 
 from braces.views import LoginRequiredMixin
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
@@ -67,28 +67,26 @@ class XFormDetailView(OdkGenView, generic.DetailView):
 
 @login_required(login_url='admin:login')
 def xform_upload(request, pk=None):
+    """Xform upload"""
     template = 'odk/xform_upload.html'
-    uploaded_file_url = ''
+    uploaded_file_url = None
     obj = None
-
-    context = {
-        'title': _("XForm create & load"),
-        'pk': pk
-    }    
-
+        
     if pk is not None:
         obj = XForm.objects.get(pk=pk)
-        context['uploaded_file_url'] = obj.xml_file.url
+        uploaded_file_url = obj.xml_file.url
 
     if request.method == 'POST':
-        manage_file = ManageFile(request)
-        msg, obj = manage_file.process_xform()
-        if msg == 'OK':
-            context['uploaded_file_url'] = obj.xml_file.url
-            messages.success(request, _("XForm loaded"), fail_silently=True)
-            return redirect(obj.get_absolute_url())
-        else:
-            messages.warning(request, msg, fail_silently=True)
+        uploaded_file_url = obj.xml_file.url
+        messages.success(request, _("XForm loaded"), fail_silently=True)
+        return redirect(obj.get_absolute_url())
+
+    context = {
+        'form': OdkForm(data=request.POST, files=request.FILES, instance=obj),
+        'title': _("XForm create & load"),
+        'pk': pk,
+        'uploaded_file_url': uploaded_file_url
+    }
 
     return render(request, template, context)
 

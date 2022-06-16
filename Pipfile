@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 django = "*"
-lxml = "*"
+pyxform = "*"
 django-bootstrap5 = "*"
 django-braces = "*"
 psycopg2 = "*"

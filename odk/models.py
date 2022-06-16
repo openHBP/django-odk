@@ -4,11 +4,13 @@ import os
 import logging
 import xml.dom.minidom
 
+from pyxform.xls2xform import xls2xform_convert
+
 from hashlib import md5
 from datetime import datetime
 
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
@@ -83,6 +85,7 @@ class XForm(models.Model):
     xml_file = models.FileField(
         verbose_name=_("XML file"),
         upload_to=xform_path,
+        blank=True, null=True,
         help_text="XLSForm "+_("converted by")+" <a href='https://getodk.org/xlsform/' target='_blank'>https://getodk.org/xlsform/</a>"
     )
     xml_content = models.TextField(
@@ -117,16 +120,6 @@ class XForm(models.Model):
         auto_now_add=True,
         verbose_name=_("Created on")
     )
-    modified_by = models.ForeignKey(
-        Profile,
-        related_name="xform_modified_by",
-        on_delete=models.CASCADE,
-        verbose_name=_("Modified by")
-    )
-    modified_on = models.DateTimeField(
-        auto_now=True,
-        verbose_name=_("Modified on")
-    )
 
     class Meta:
         verbose_name = _("Available form")
@@ -137,10 +130,18 @@ class XForm(models.Model):
     def class_name(self):
         return self.__class__.__name__
 
+    def _set_creator(self, current_user):
+        if not self.created_by:
+            self.created_by = current_user
+
     def _set_xml_content(self):
-        with open(self.xml_file.path, 'r') as f:
-            myxml = xml.dom.minidom.parseString(f.read())
-            self.xml_content = myxml.toprettyxml()
+        try:
+            with open(self.xml_file.path, 'r') as f:
+                myxml = xml.dom.minidom.parseString(f.read())
+                self.xml_content = myxml.toprettyxml()
+        except Exception as xcpt:
+            print(xcpt)
+            raise Exception(f"XML file not found in {self.xml_file.path}")
         return
 
     def _set_form_id(self):
@@ -183,24 +184,19 @@ class XForm(models.Model):
         self.title = '' if not matches else matches[0]
         return
 
-    def save(self, *args, **kwargs):
-        """
-        Save form_id, version and title contained in xml file
-        """
-        self._set_xml_content()
-        old_form_id = self.form_id
-        self._set_form_id()
-        self._set_version()
-        self._set_title()
-        # check if we have an existing form_id,
-        # if so, the one must match but only if xform is NOT new
-        if self.pk and old_form_id and old_form_id != self.form_id:
-            raise Exception(
-                "Your updated form's form_id '%(new_id)s' must match "
-                  "the existing forms' form_id '%(old_id)s'." %
-                  {'new_id': self.form_id, 'old_id': old_form_id})
-
-        super(XForm, self).save(*args, **kwargs)
+    def process_xform(self):
+        xlspath = self.xls_file.path
+        xmlpath = xlspath.replace(".xlsx", ".xml")
+        response = xls2xform_convert(xlspath, xmlpath)
+        # TODO: to be improved!
+        if response:
+            raise Exception(response)
+        else:
+            self.xml_file = self.xls_file.name.replace(".xlsx", ".xml")
+            self._set_xml_content()
+            self._set_form_id()
+            self._set_version()
+            self._set_title()
         return
 
     def get_absolute_url(self):
@@ -210,7 +206,7 @@ class XForm(models.Model):
         return self._meta.verbose_name
 
     def __str__(self):
-        filename = str(self.xml_file).replace(f"{self.class_name}/", '')
+        filename = str(self.xls_file).replace(f"{self.class_name}/", '')
         form_id = getattr(self, 'form_id', '')
         version = getattr(self, 'version', '')
         form_version = f"{filename} => {form_id}, version {version}"
@@ -306,14 +302,6 @@ class XFormSubmit(models.Model):
     submitted_on = models.DateTimeField(
         verbose_name=_("Submitted on")
     )
-    modified_by = models.CharField(
-        max_length=255,
-        verbose_name=_("Modified by"),
-        blank=True, null=True
-    )
-    modified_on = models.DateTimeField(
-        auto_now=True, verbose_name=_("Modified on")
-    )
 
     class Meta:
         verbose_name = _("Submitted form")
@@ -326,11 +314,13 @@ class XFormSubmit(models.Model):
 
     @property
     def subfolder1(self):
+        """folder name: form_id-version"""
         return f"{self.form_id}-{self.version}"
 
     @property
     def subfolder2(self):
-        return self.survey_date
+        """survey date in format YYYY-MM-DD"""
+        return self.survey_date.strftime('%Y-%m-%d')
 
     def _set_xml_content(self):
         with open(self.xml_file.path, 'r') as f:
@@ -355,8 +345,6 @@ class XFormSubmit(models.Model):
         matches = re.findall(r'<username>([^<]+)</username>', self.xml_content)
         if matches:
             self.submitted_by = matches[0]
-            if self.modified_by is None:
-                self.modified_by = self.submitted_by
             return
         else:
             LOG.warning("Unable to find '<username>' pattern in xml file")

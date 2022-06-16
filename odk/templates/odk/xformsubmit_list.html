@@ -14,7 +14,7 @@
           {% endfor %}
         </ul>
         <p>{% trans "Click on load forms to load them in the database" %}
-        <a class="btn btn-main2 mb-2" href="{% url 'odk:load_submitted' %}">
+        <a class="btn btn-primary mb-2" href="{% url 'odk:load_submitted' %}">
             {% trans 'Load forms' %}
         </a></p>
       {% endif %}
@@ -52,9 +52,9 @@
 {% else %}
   <p>{% trans "Login to view submitted forms" %}</p>
   <form class="form-inline ml-auto">
-    <a href="{% url 'admin:login' %}" class="btn btn-main2">{% trans "Login" %}</a>
+    <a href="{% url 'admin:login' %}" class="btn btn-primary">{% trans "Login" %}</a>
   </form>
 {% endif %}
 
-<a class="btn btn-main2" href="{% url 'odk:home' %}"><i class="fas fa-arrow-circle-left me-2"></i>{% trans 'Back' %}</a>
+<a class="btn btn-primary" href="{% url 'odk:home' %}"><i class="fas fa-arrow-circle-left me-2"></i>{% trans 'Back' %}</a>
 {% endblock %}

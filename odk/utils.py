@@ -3,15 +3,15 @@
 import os
 import re
 import logging
-# import xml.dom.minidom
+
 from datetime import datetime
 # Django
-from django.utils.translation import ugettext as _
-from django.db import IntegrityError
+from django.utils.translation import gettext as _
+
 # App
 from odk.storage import overwrite_storage
 from odk.models import (
-    XForm, XFormSubmit, 
+    XForm, XFormSubmit,
     get_form_id,
     get_version,
     get_survey_date,
@@ -48,27 +48,6 @@ class ManageFile(object):
     def __init__(self, request):
         self.request = request
 
-    def process_xform(self):
-        """
-        Main function
-        return msg, instance
-        """
-        msg = ''
-        instance = None
-        msg = self.read_xml(file_key='xml_template_file')
-        if msg == 'OK':
-            msg = self.set_key_elements()
-            if msg == 'OK':
-                msg = self.save_file(file_key='xml_template_file', class_name='XForm')
-                if msg == 'OK':
-                    msg = self.get_xform_pk(class_name='XForm')
-                    if msg == 'NOT_FOUND':
-                        msg, instance = self.insert_in_xform()                           
-                    if msg == 'FOUND':
-                        msg, instance = self.update_in_xform()
-
-        return msg, instance
-
     def process_xformsubmit(self):
         """
         Main function
@@ -78,7 +57,7 @@ class ManageFile(object):
         instance = None
         msg = self.read_xml(file_key='xml_submission_file')
         if msg == 'OK':
-            msg = self.set_key_elements()
+            msg = self.get_key_elements()
             if msg == 'OK':
                 # msg = self.get_xform_pk(class_name='XFormSubmit')
                 # if msg == 'FOUND':
@@ -95,7 +74,7 @@ class ManageFile(object):
         Get file and read content
         file_key:
         - 'xml_submission_file' for submitted files
-        - 'xml_template_file' for template_files
+        - 'xml_file' for template_files (no more used 2022-06-16)
         """
         if self.request.FILES and file_key in self.request.FILES:
             self.xml_content = self.request.FILES[file_key].read().decode("utf-8")
@@ -106,7 +85,7 @@ class ManageFile(object):
             LOG.error = msg
             return msg
 
-    def set_key_elements(self):
+    def get_key_elements(self):
         """
         Get key element for processing
         """
@@ -133,9 +112,10 @@ class ManageFile(object):
             survey_date = datetime.now().strftime("%Y-%m-%d")
         return survey_date
 
+
     def get_xform_pk(self, class_name='XForm'):
         """
-        Get XForm pk
+        Get XForm pk (no more used 2022-06-16)
         """
         try:
             self.xform = XForm.objects.get(form_id=self.form_id, version=self.version)
@@ -148,22 +128,6 @@ class ManageFile(object):
                 msg = 'NOT_FOUND'
         return msg
 
-    def update_in_xform(self):
-        """
-        Update xform table with new template values
-        Need to have variable 'self.xml_file' => save_file before!
-        """
-        try:
-            self.xform.xml_content = self.xml_content
-            self.xform.xml_file = self.xml_file
-            self.xform.modified_on = overwrite_storage.get_modified_time(self.xml_file)
-            self.xform.submitted_on = overwrite_storage.get_created_time(self.xml_file)
-            self.xform.save()
-
-        except Exception as xcpt:
-            LOG.error(xcpt)            
-            return xcpt, None
-        return 'OK', self.xform
 
     def save_file(self, file_key, class_name):
         """
@@ -184,6 +148,7 @@ class ManageFile(object):
             msg = xcpt
         return msg        
 
+
     def insert_in_xformsubmit(self):
         """
         Insert submitted data into XFormSubmit table
@@ -192,8 +157,7 @@ class ManageFile(object):
         try:
             # myxml = xml.dom.minidom.parseString(self.xml_content)
             # xml_pretty_str = myxml.toprettyxml()
-            picture_files = get_submitted_picture(self.xml_content, f'pic_img')
-            modified_on = overwrite_storage.get_modified_time(self.xml_file)
+            picture_files = get_submitted_picture(self.xml_content, 'pic_img')
             submitted_on = overwrite_storage.get_created_time(self.xml_file)
             instanceid = get_instanceid(self.xml_content)
             try:
@@ -201,7 +165,6 @@ class ManageFile(object):
                 # Update
                 # xsub.xml_content=xml_pretty_str, # done in models.py
                 xsub.picture_files = picture_files,
-                xsub.modified_on = modified_on
                 xsub.submitted_on = submitted_on
                 
             except XFormSubmit.DoesNotExist:
@@ -212,7 +175,6 @@ class ManageFile(object):
                     # xml_content=xml_pretty_str, # done in models.py
                     picture_files=picture_files,
                     submitted_on=submitted_on,
-                    modified_on=modified_on
                 )
             
             pathname = self.xml_file
@@ -254,32 +216,3 @@ class ManageFile(object):
             LOG.error(xcpt)
             msg = xcpt
         return msg
-
-
-    def insert_in_xform(self):
-        """
-        in: filename (str) and user (instance)
-        out: XForm instance
-        """
-        try:
-            # myxml = xml.dom.minidom.parseString(self.xml_content)
-            # xml_pretty_str = myxml.toprettyxml()
-            obj = XForm.objects.create(
-                xml_file=self.xml_file,
-                # xml_content=xml_pretty_str, # done in models.py
-                created_by=self.request.user,
-                modified_by=self.request.user
-            )
-        except IntegrityError as integr:
-            # should not happen since we've done a check on form_id & version in get_xform_pk
-            LOG.error(integr)
-            return integr, None
-            
-        except Exception as xcpt:
-            LOG.error(xcpt)
-            return xcpt, None
-
-        return 'OK', obj
-
-
-
