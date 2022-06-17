@@ -120,6 +120,7 @@ class XForm(models.Model):
         auto_now_add=True,
         verbose_name=_("Created on")
     )
+    model_created = models.BooleanField(_("Model created"), default=False)
 
     class Meta:
         verbose_name = _("Available form")
@@ -137,10 +138,10 @@ class XForm(models.Model):
     def _set_xml_content(self):
         try:
             with open(self.xml_file.path, 'r') as f:
-                myxml = xml.dom.minidom.parseString(f.read())
-                self.xml_content = myxml.toprettyxml()
+                # myxml = xml.dom.minidom.parseString(f.read())
+                # self.xml_content = myxml.toprettyxml()
+                self.xml_content = f.read()
         except Exception as xcpt:
-            print(xcpt)
             raise Exception(f"XML file not found in {self.xml_file.path}")
         return
 
@@ -209,8 +210,8 @@ class XForm(models.Model):
         filename = str(self.xls_file).replace(f"{self.class_name}/", '')
         form_id = getattr(self, 'form_id', '')
         version = getattr(self, 'version', '')
-        form_version = f"{filename} => {form_id}, version {version}"
-        return form_version
+        form_version = f"{form_id} {version}"
+        return filename
 
     @property
     def hash(self):
@@ -302,6 +303,7 @@ class XFormSubmit(models.Model):
     submitted_on = models.DateTimeField(
         verbose_name=_("Submitted on")
     )
+    data_loaded = models.BooleanField(_("Data loaded"), default=False)
 
     class Meta:
         verbose_name = _("Submitted form")

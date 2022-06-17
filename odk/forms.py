@@ -11,7 +11,6 @@ class OdkForm(forms.ModelForm):
         fields = ['xls_file', 'short_desc']
         widgets = {
             "xls_file": forms.FileInput(attrs={
-                # "name": "xls_template_file",
                 "accept": ".xlsx"}
             ),
             "short_desc": forms.TextInput(attrs={

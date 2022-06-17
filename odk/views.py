@@ -27,9 +27,9 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect
 
 from .storage import overwrite_storage
-from .models import XForm, XFormSubmit
+from .models import XForm, XFormSubmit, xform_path
 from .forms import OdkForm
-from .utils import ManageFile
+from odkdata import create_model, load_submit_data
 
 
 LOG = logging.getLogger(__name__)
@@ -52,6 +52,15 @@ class OdkGenView(object):
         return context
 
 
+class XFormTemplateView(generic.TemplateView):
+    template_name = "xform_doc.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _("XForm Documentation")
+        return context
+
+
 class XFormListView(generic.ListView):
     model = XForm
 
@@ -63,6 +72,26 @@ class XFormListView(generic.ListView):
 
 class XFormDetailView(OdkGenView, generic.DetailView):
     model = XForm
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        if 'xls2xml' in request.path:
+            obj.process_xform()
+            obj.save()
+        if 'createmodel' in request.path:
+            if create_model.process(obj):
+                model_name = create_model.rm_digit(obj.form_id).capitalize()
+                create_msg = _("created with success!")
+                messages.success(request, f"Model odkdata.models.{model_name} {create_msg}")
+                messages.success(request, _("You can now run manage.py makemigrations odkdata followed by migrate."))
+                obj.model_created = True
+                obj.save()
+                return redirect(obj.get_absolute_url())
+            else:
+                messages.error(request, "Error while creating model, check your error logs.")
+
+        return super().get(request, *args, **kwargs)
 
 
 @login_required(login_url='admin:login')
@@ -76,9 +105,17 @@ def xform_upload(request, pk=None):
         obj = XForm.objects.get(pk=pk)
         uploaded_file_url = obj.xml_file.url
 
-    if request.method == 'POST':
-        uploaded_file_url = obj.xml_file.url
-        messages.success(request, _("XForm loaded"), fail_silently=True)
+    if request.method == 'POST' and request.FILES.get('xls_file'):
+        file_pointer = request.FILES.get('xls_file')
+        file_path = os.path.join("XForm", file_pointer.name)
+        
+        filename = overwrite_storage.save(file_path, file_pointer)
+
+        uploaded_file_url = overwrite_storage.url(filename)
+
+        obj = XForm.objects.create(xls_file=file_path, created_by=request.user, form_id=f"{filename} (tmp)")
+        obj.save()
+        # messages.success(request, _("xlsx file loaded"), fail_silently=True)
         return redirect(obj.get_absolute_url())
 
     context = {
@@ -97,25 +134,42 @@ class XFormDelView(LoginRequiredMixin, generic.DeleteView):
     confirm_message = _("Delete this form?")
     success_url = reverse_lazy("odk:xform_list")
 
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         """
-        On delete rm file
+        On delete rm xls and xml file
         """
-        self.object = self.get_object()
         try:
-            filePath = self.object.xml_file.path
-            os.remove(filePath)
-        except:
+            if self.object.xls_file:
+                filePath = self.object.xls_file.path
+                os.remove(filePath)
+            if self.object.xml_file:
+                filePath = self.object.xml_file.path
+                os.remove(filePath)
+        except Exception as e:
             msg = f"Error while deleting file {filePath}"
             LOG.error(msg)
             messages.warning(self.request, msg, fail_silently=True)
-        success_url = self.get_success_url()
         self.object.delete()
-        return HttpResponseRedirect(success_url)
+        success_url = self.get_success_url()
+        return HttpResponseRedirect(self.success_url)
 
 
 class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
     model = XFormSubmit
+
+    def get(self, request, *args, **kwargs):
+        obj = self.get_object()
+
+        if 'loaddata/' in request.path:
+            if load_submit_data.load_record(obj):
+                load_msg = _("Record loaded with success!")
+                messages.success(request, f"{obj} {load_msg}")
+                obj.data_loaded = True
+                obj.save()
+                return redirect(obj.get_absolute_url())
+            else:
+                messages.error(request, "Error while loading data into odkdata model, check your error logs.")
+        return super().get(request, *args, **kwargs)   
 
 
 # @login_required(login_url='admin:login')
@@ -177,23 +231,4 @@ class XFormSubmitDelView(LoginRequiredMixin, generic.DeleteView):
         self.object.delete()
         return HttpResponseRedirect(success_url)
 
-# @login_required(login_url='admin:login')
-# def load_submittedfiles(request):
-#     """
-#     TO_DO: check wether picture can be read here...
-#     """
-#     dirs, file_list = overwrite_storage.listdir("XFormSubmit")
-
-#     for f in file_list:
-#         filepath = os.path.join("XFormSubmit", f)
-#         modified_on = overwrite_storage.get_modified_time(filepath)
-#         submitted_on = overwrite_storage.get_created_time(filepath)
-
-#         obj = XFormSubmit.objects.create(
-#             xml_file=filepath, 
-#             submitted_on=submitted_on,
-#             modified_on=modified_on
-#         )
-
-#     return redirect('odk:xformsubmit_list')
   

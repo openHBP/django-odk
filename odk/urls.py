@@ -25,12 +25,15 @@ urlpatterns = [
 
     path('list/', views.XFormListView.as_view(), name='xform_list'),
     path('<int:pk>/', views.XFormDetailView.as_view(), name='xform_detail'),
+    path('<int:pk>/xls2xml', views.XFormDetailView.as_view(), name='xform_conv2xml'),
+    path('<int:pk>/createmodel', views.XFormDetailView.as_view(), name='xform_createmodel'),
     path('add/', views.xform_upload, name='xform_add'),
-    path('<int:pk>/upd', views.xform_upload, name='xform_upd'),
-    path('<int:pk>/del', views.XFormDelView.as_view(), name='xform_del'),
+    path('doc/', views.XFormTemplateView.as_view(), name='xform_doc'),
+    # path('<int:pk>/upd', views.xform_upload, name='xform_upd'),
+    path('<int:pk>/delete', views.XFormDelView.as_view(), name='xform_del'),
 
     path('submitted/', views.submittedfile_list, name='xformsubmit_list'),    
-    # path('submitted/load/', views.load_submittedfiles, name='load_submitted'),
     path('submitted/<int:pk>/', views.XFormSubmitDetailView.as_view(), name='xformsubmit_detail'),
-    path('submitted/<int:pk>/del', views.XFormSubmitDelView.as_view(), name='xformsubmit_del'),    
+    path('submitted/<int:pk>/loaddata/', views.XFormSubmitDetailView.as_view(), name='xformsubmit_load'),
+    path('submitted/<int:pk>/delete', views.XFormSubmitDelView.as_view(), name='xformsubmit_del'),    
 ]

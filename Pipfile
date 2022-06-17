@@ -6,9 +6,12 @@ name = "pypi"
 [packages]
 django = "*"
 pyxform = "*"
+xlsconv = "*"
 django-bootstrap5 = "*"
 django-braces = "*"
 psycopg2 = "*"
-django-digest = {editable = true, ref = "52ba7edeb326efd97d5670273bb6fa8b0539e501", git = "https://github.com/dimagi/django-digest"}
+pillow = "*"
 
 [dev-packages]
+pylint-django = "*"
+pycodestyle = "*"

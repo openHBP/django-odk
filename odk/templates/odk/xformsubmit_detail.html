@@ -11,10 +11,7 @@
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#xml" type="button" role="tab" aria-controls="xml" aria-selected="false">{% trans "XML Content" %}</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#modif" type="button" role="tab" aria-controls="modif" aria-selected="false">{% trans "Creation" %}</button>
-        </li>    
+        </li>   
     </ul>
 
     <div class="tab-content" id="myTabContent">
@@ -27,14 +24,10 @@
                 {{ object.xml_content }}
             </textarea>
         </div>
-
-        <div class="tab-pane fade" id="modif" role="tabpanel" aria-labelledby="profile-tab">
-            {% include 'odk/_xformsubmit_detail_modif.html' %}
-        </div>
     </div>
 
     {% if user.is_authenticated %}
-        {% if "del" in request.path %}
+        {% if "delete" in request.path %}
             <br />
             <h4 class="text-danger">{{view.confirm_message}}</h4>
             <form action="" method="post">{% csrf_token %}

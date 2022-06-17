@@ -1,12 +1,14 @@
 {% load model_tags static %}
 <div class="mb-3 row">
     <div class="col-sm-2 form-label">{% get_verbose_field_name object "xls_file" %}</div>
-    <div class="col-sm-10 form-input">{{ object.xls_file }}</div>
+    <div class="col-sm-10 form-input"><a href="{{ object.xls_file.url }}" target="_blank">{{ object.xls_file }}</a></div>
 </div>
+{% if object.xml_file %}
 <div class="mb-3 row">
     <div class="col-sm-2 form-label">{% get_verbose_field_name object "xml_file" %}</div>
     <div class="col-sm-10 form-input"><a href="{{ object.xml_file.url }}" target="_blank">{{ object.xml_file }}</a></div>
 </div>
+{% endif %}
 <div class="mb-3 row">
     <div class="col-sm-2 form-label">{% get_verbose_field_name object "form_id" %}</div>
     <div class="col-sm-4 form-input">{{ object.form_id }}</div>
@@ -22,4 +24,14 @@
 <div class="mb-3 row">
     <div class="col-sm-2 form-label">{% get_verbose_field_name object "short_desc" %}</div>
     <div class="col-sm-10 form-input">{{ object.short_desc }}</div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "created_by" %}</div>
+    <div class="col-sm-10 form-input">{{ object.created_by }}</div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "created_on" %}</div>
+    <div class="col-sm-10 form-input">{{ object.created_on }}</div>
 </div>

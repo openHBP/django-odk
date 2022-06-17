@@ -6,6 +6,7 @@ Django data collection tool using [ODK-collect](https://play.google.com/store/ap
 - Django web site up and running
 - Smartphone or tablet with [ODK-Collect installed](https://play.google.com/store/apps/details?id=org.odk.collect.android&hl=en_US&gl=US)
 - Set of forms in [Xforms](https://xlsform.org/en/) format available in xml. Use https://getodk.org/xlsform/ to validate and export your forms in xml format.
+- Database up & running **with vector geodatabase functionality**: PostGIS, Oracle Spatial, SQLite/SpatiaLite
 
 
 ## Installation
@@ -17,11 +18,12 @@ $ python manage.py migrate
 $ python manage.py createsuperuser
 ```
 
-* Add django_odk to your INSTALLED_APPS settings
+* Add odk and odkdata to your INSTALLED_APPS settings
 ```py
 INSTALLED_APPS = (
     ...
     'odk',
+    'odkdata',
 )
 ```
 

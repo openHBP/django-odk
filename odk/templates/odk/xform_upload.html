@@ -8,6 +8,8 @@
 
   {% include 'xform_howto.html' %}
 
+  <p>{% blocktrans %}If you have a correct xlsx (XForm) file you can now Upload it{% endblocktrans %}</p>
+
   {% if uploaded_file_url %}
       <br/>
       <p>{% trans "Currently" %} <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
