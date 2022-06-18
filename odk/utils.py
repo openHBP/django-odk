@@ -180,8 +180,8 @@ class ManageFile(object):
             pathname = self.xml_file
             lastslash = pathname.rfind('/')
             fname = pathname[lastslash+1:]
-            msg = f'fichier {fname} submitted!'
-            # msg = _("Thanks! Your form has been received!")
+            #msg = f'fichier {fname} submitted!'
+            msg = _("Thanks! Your form has been received!")
         except Exception as xcpt:
             LOG.error(xcpt)
             return xcpt, None

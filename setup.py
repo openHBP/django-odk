@@ -9,6 +9,9 @@ with open("README.md", "r") as fh:
 REQUIREMENTS = [
     'django>=2.2,<4.0',
     'django-braces>=1.11,<2.0',
+    'pxforms>=1.10,<2.0',
+    'xlsconv>=1.3.0,<2.0',
+    'pillow>=9.1.1,<9.9',
 ]
 
 CLASSIFIERS = [
@@ -33,7 +36,7 @@ setup(
     author='Patrick HOUBEN',
     author_email='p.houben@cra.wallonie.be',
     license='GPL-3.0-or-later',
-    packages=['odk', 'odk.openrosa'],
+    packages=['odk', 'odkdata', 'odk.openrosa'],
     # package_data={'static':['*'], 'templates':['*'], 'templatestags':['*'],},
     include_package_data=True,
     install_requires=REQUIREMENTS,

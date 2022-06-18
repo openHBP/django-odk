@@ -6,7 +6,7 @@ Django data collection tool using [ODK-collect](https://play.google.com/store/ap
 - Django web site up and running
 - Smartphone or tablet with [ODK-Collect installed](https://play.google.com/store/apps/details?id=org.odk.collect.android&hl=en_US&gl=US)
 - Set of forms in [Xforms](https://xlsform.org/en/) format available in xml. Use https://getodk.org/xlsform/ to validate and export your forms in xml format.
-- Database up & running **with vector geodatabase functionality**: PostGIS, Oracle Spatial, SQLite/SpatiaLite
+- Database up & running **with vector geodatabase functionality** (if your ODK form use geopoint): PostGIS, Oracle Spatial, SQLite/SpatiaLite
 
 
 ## Installation
@@ -74,17 +74,29 @@ urlpatterns = [
 * create a group 'odk-admin' with create, read, update access on odk objects
 * Associate this group to the appropriate users
 
-## Upload Xforms
-Connect to django-odk => **Available form** => Add and follow instructions to upload xml forms
+## XForm Create & Load
+Connect to django-odk => **Available form** => Add and follow 4 steps:
 
-Once it is done, you are ready to go with form encoding on your smartphone!
+1. Build an XLSForm file with 3 tabs 'survey', 'choices', 'settings' [Cfr documentation](https://docs.getodk.org/xlsform/)
+
+2. Upload xlsx file (XForm) by clicking on 'Choose file' and Save
+
+3. Convert xlsx file to xml XForm compatible file
+
+From this point, you are ready to go with form encoding on your smartphone!
 
 > Follow [ODK instructions](https://docs.getodk.org/collect-connect/#configure-server-manually) to configure the connexion to the server
 
 > Get, fill-in and submit data [using ODK Collect](https://docs.getodk.org/collect-using/)
 
+4. If you want to get your data back in a model instead of XML content you can run the **CreateModel** step. It will create a model to get your submitted data in a model formatted like your xlsx form. Thanks [pyxform](https://github.com/XLSForm/pyxform)! Model creation is done into `odkdata` app.
+
 ## Get submitted data on server
-Go to **Submitted form** menu of your server to see submitted data
+Go to **Submitted form** menu of your server to see submitted data in XML format.
+
+Insert submitted data through admin module.
+
+Select record or set of records and choose action 'Load Submitted Data'
 
 
 

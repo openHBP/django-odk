@@ -35,6 +35,9 @@
                 <a class="btn btn-secondary m-1" href="{% url 'odk:xformsubmit_detail' object.id %}">{% trans 'No/Cancel' %}</a>
             </form>
         {% else %}
+            {% if not object.data_loaded %}
+                <a class="btn btn-success" href="{% url 'odk:xformsubmit_load' object.id %}">{% trans 'Load record' %}</a>
+            {% endif %}
             <a class="btn btn-primary" href="{% url 'odk:xformsubmit_del' object.id %}"><i class="far fa-trash-alt me-2"></i>{% trans 'Delete' %}</a>
         {% endif %}
         <a class="btn btn-primary my-2" href="{% url 'odk:xformsubmit_list' %}"><i class="fas fa-arrow-circle-left me-2"></i>{% trans 'Back' %}</a>
