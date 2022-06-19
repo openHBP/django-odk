@@ -31,8 +31,8 @@
     {% for i in object_list %}
         <tr>
           <td><a href="{{ i.get_absolute_url }}">{{ i.id }}</a></td>
-          <td>{{ i.xls_file }}</td>
-          <td>{{ i.xml_file }}</td>
+          <td><a href="{{ i.xls_file.url }}" target="_blank">{{ i.xls_file }}</a></td>
+          <td><a href="{{ i.xml_file.url }}" target="_blank">{{ i.xml_file }}</a></td>
           <td>{{ i.title }}</td>
           <td>{{ i.form_id }}</td>
           <td>{{ i.version }}</td>

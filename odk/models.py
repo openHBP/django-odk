@@ -120,7 +120,10 @@ class XForm(models.Model):
         auto_now_add=True,
         verbose_name=_("Created on")
     )
-    model_created = models.BooleanField(_("Model created"), default=False)
+    model_created_on = models.DateTimeField(
+        verbose_name=_("Model created on"),
+        null=True, blank=True
+    )
 
     class Meta:
         verbose_name = _("Available form")
@@ -303,7 +306,10 @@ class XFormSubmit(models.Model):
     submitted_on = models.DateTimeField(
         verbose_name=_("Submitted on")
     )
-    data_loaded = models.BooleanField(_("Data loaded"), default=False)
+    inserted_on = models.DateTimeField(
+        verbose_name=_("Inserted on"),
+        blank=True, null=True
+    )    
 
     class Meta:
         verbose_name = _("Submitted form")

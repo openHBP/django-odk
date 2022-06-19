@@ -42,6 +42,9 @@ LANGUAGE_CODE = 'en'
 AUTH_USER_MODEL = 'auth.user'
 ```
 
+* For a more interactive app, configure **logging** as explained in [Lincoln Loop](https://lincolnloop.com/blog/django-logging-right-way/) and **messages** as explained in [Django](https://docs.djangoproject.com/en/4.0/ref/contrib/messages/)
+
+
 * Add **is_odk_admin** property to your AUTH_USER_MODEL (django.contrib.auth.models file or specific accounts.models)
 ```py
     @property

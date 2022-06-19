@@ -40,5 +40,10 @@
 
 <div class="row mb-3">    
     <div class="col-sm-2 form-label">{% get_verbose_field_name object "submitted_on" %}</div>
-    <div class="col-sm-10 form-input">{{ object.submitted_on }}</div>
+    <div class="col-sm-10 form-input">{{ object.submitted_on|date:"Y-m-d H:i:s" }}</div>
+</div>
+
+<div class="row mb-3">    
+    <div class="col-sm-2 form-label">{% get_verbose_field_name object "inserted_on" %}</div>
+    <div class="col-sm-10 form-input">{{ object.inserted_on|date:"Y-m-d H:i:s" }}</div>
 </div>

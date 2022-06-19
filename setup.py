@@ -12,6 +12,7 @@ REQUIREMENTS = [
     'pxforms>=1.10,<2.0',
     'xlsconv>=1.3.0,<2.0',
     'pillow>=9.1.1,<9.9',
+    'lxml>=4.9.0,<9.0.0',
 ]
 
 CLASSIFIERS = [

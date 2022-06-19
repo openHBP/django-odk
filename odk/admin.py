@@ -5,6 +5,7 @@ odk.admin description
 from django.contrib import admin
 from django.contrib import messages
 from django.utils.translation import gettext as _
+from django.utils.timezone import now
 from django.shortcuts import render
 
 from .models import XForm, XFormSubmit
@@ -39,7 +40,7 @@ def xform_createmodel(modeladmin, request, queryset):
         record = queryset.first()
         if create_model.process(record):
             messages.success(request, "Model created")
-            record.model_created = True
+            record.model_created_on = now()
             record.save()
         else:
             messages.error(request, "Error while creating model")
@@ -49,7 +50,7 @@ class XFormAdmin(admin.ModelAdmin):
     list_display = ('id', 'xls_file', 'form_id', 'version', 'xml_file')
     list_filter = ('xls_file',)
     search_fields = ('xls_file', 'xml_content', 'short_desc', 'title',)
-    fields = ['xls_file', 'short_desc', 'model_created']
+    # fields = ['xls_file', 'xml_content', 'short_desc', 'model_created']
     actions = [xform_convert, xform_createmodel]
 
     def save_model(self, request, obj, form, change):
@@ -63,8 +64,10 @@ class XFormAdmin(admin.ModelAdmin):
 
 @admin.action(description='Load Submitted Data')
 def xformsubmit_load_data(modeladmin, request, queryset):
-    for x in queryset:
-        load_submit_data.load_record(x)
+    for record in queryset:
+        load_submit_data.load_record(record)
+        record.inserted_on = now()
+        record.save()
 
 
 class XFormSubmitAdmin(admin.ModelAdmin):

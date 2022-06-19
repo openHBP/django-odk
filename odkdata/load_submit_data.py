@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 from django.apps import apps
 from django.contrib.gis.geos.point import Point
 from django.db.models import ManyToOneRel, IntegerField
+from django.contrib.gis.db.models import PointField
 from django.forms import model_to_dict
 
 from odk.models import XFormSubmit
@@ -50,7 +51,7 @@ def load_record(xfs):
                     # Add ManyToOneRel in mdict
                     itemtag = soup.find_all(fname)
                     value = [i.text for i in itemtag]
-                    mdict[fname] = value
+                    mdict[fname] = value                    
                 else:
                     itemtag = soup.find(fname)
                     if itemtag is not None:
@@ -59,20 +60,19 @@ def load_record(xfs):
                             if value == '':
                                 value = 0
                             value = int(value)
+                        if isinstance(field, PointField):
+                            loc_lat, loc_long, loc_alt, precision = value.split(" ")
+                            value = Point(x=float(loc_long), y=float(loc_lat), srid=4326)                         
                             # print(f"{fname}: {value}")
             # Assign value to key in fdict without ManyToOneRel fields
             if not isinstance(field, ManyToOneRel):
                 fdict[fname] = value
 
-        # Particular case
-        if fdict['env_bio'] is None:
-            fdict['env_bio'] = 'pas'
-
         # Geometry
-        if fdict['loc_xy'] is not None:
-            loc_lat, loc_long, loc_alt, precision = fdict['loc_xy'].split(" ")
-            loc_geom = Point(x=float(loc_long), y=float(loc_lat), srid=4326)
-            fdict['loc_xy'] = loc_geom
+        # if fdict['loc_xy'] is not None:
+        #     loc_lat, loc_long, loc_alt, precision = fdict['loc_xy'].split(" ")
+        #     loc_geom = Point(x=float(loc_long), y=float(loc_lat), srid=4326)
+        #     fdict['loc_xy'] = loc_geom
 
         # Insert data in main model
         try:

@@ -19,12 +19,14 @@ import logging
 from braces.views import LoginRequiredMixin
 
 from django.utils.translation import gettext as _
+from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+
 
 from .storage import overwrite_storage
 from .models import XForm, XFormSubmit, xform_path
@@ -79,13 +81,14 @@ class XFormDetailView(OdkGenView, generic.DetailView):
         if 'xls2xml' in request.path:
             obj.process_xform()
             obj.save()
+            messages.success(request, _("XLSX successfully converted to XML XForm format."))
         if 'createmodel' in request.path:
             if create_model.process(obj):
                 model_name = create_model.rm_digit(obj.form_id).capitalize()
                 create_msg = _("created with success!")
                 messages.success(request, f"Model odkdata.models.{model_name} {create_msg}")
                 messages.success(request, _("You can now run manage.py makemigrations odkdata followed by migrate."))
-                obj.model_created = True
+                obj.model_created_on = now()
                 obj.save()
                 return redirect(obj.get_absolute_url())
             else:
@@ -164,7 +167,8 @@ class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
             if load_submit_data.load_record(obj):
                 load_msg = _("Record loaded with success!")
                 messages.success(request, f"{obj} {load_msg}")
-                obj.data_loaded = True
+                obj.is_inserted = True
+                obj.inserted_on = now()
                 obj.save()
                 return redirect(obj.get_absolute_url())
             else:
