@@ -9,7 +9,7 @@ with open("README.md", "r") as fh:
 REQUIREMENTS = [
     'django>=2.2,<4.0',
     'django-braces>=1.11,<2.0',
-    'pyxforms>=1.10.0,<2.0',
+    'pyxform>=1.10.0,<2.0',
     'xlsconv>=1.3.0,<2.0',
     'pillow>=9.1.1,<9.9',
     'lxml>=4.9.0,<9.0.0',

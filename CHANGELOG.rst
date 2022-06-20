@@ -53,19 +53,10 @@ Changes
 ------------------
 * add md5: string in <hash> tag of xformsList.xml
 
-0.3.0 (2022-06-18)
+0.3.3 (2022-06-18)
 ------------------
 * rm modified_on & modified_by field
 * add convert xls 2 xml (use of pxforms)
 * new odkdata app with 2 methods: create_model (use of xlsconv) & load_submit_data
 * add datetime fields in XForm & XFormSubmit to check data convert & data load_submit_data
 * modify view for Odk load with 4 steps (cfr. README file)
-
-0.3.1 (2022-06-18)
-------------------
-* version issue pyxform
-* item translate
-
-0.3.2 (2022-06-18)
-------------------
-* version issue pyxform
