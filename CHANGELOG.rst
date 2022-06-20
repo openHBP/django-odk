@@ -63,5 +63,9 @@ Changes
 
 0.3.1 (2022-06-18)
 ------------------
-* version issue pxform
+* version issue pyxform
 * item translate
+
+0.3.2 (2022-06-18)
+------------------
+* version issue pyxform
