@@ -106,5 +106,22 @@ Comments/Improvements welcome!
 
 Investigate [WQ Framework](https://wq.io/) but I still don't see how to deploy offline forms on smartphone.
 
+# Further notes (new release objective)
 
+## Convert XLSForm (xlsx) to xml on the fly
+Cfr. https://github.com/XLSForm/pyxform
+Once your virtualenv is activated and **pyxform** installed, run
+```sh
+xls2xform "/var/www/app/media/XForm/pdt.xlsx" "pdt.xml"
+```
+It will generate the XML form for ODK-Collect
+
+## Convert XML to python model
+Cfr. https://github.com/wq/xlsform-converter
+
+Once your virtualenv is activated and **xlsconv** installed, run
+```sh
+xls2django my-odk-survey.xls > myapp/models.py
+```
+It will generate the target model automatically!
 
