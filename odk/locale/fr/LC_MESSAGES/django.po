@@ -20,7 +20,7 @@ msgstr ""
 
 #: odk/admin.py:19
 msgid "Convert XLSX to XML"
-msgstr ""
+msgstr "Convertir XLSX en XML"
 
 #: odk/admin.py:30
 msgid "Create Model in odkdata"
@@ -51,7 +51,7 @@ msgstr ""
 
 #: odk/admin.py:92
 msgid "Insert in odkdata model"
-msgstr ""
+msgstr "Insérer dans odkdata model"
 
 #: odk/models.py:80
 msgid "Excel file"
@@ -158,7 +158,7 @@ msgstr "Contenu XML"
 #: odk/templates/odk/xform_detail.html:43
 #: odk/templates/odk/xformsubmit_detail.html:34
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: odk/templates/odk/xform_detail.html:44
 #: odk/templates/odk/xformsubmit_detail.html:35
@@ -272,7 +272,7 @@ msgstr "Spécification ODK XForms"
 
 #: odk/templates/xform_howto.html:3
 msgid "STEPS"
-msgstr ""
+msgstr "ÉTAPES"
 
 #: odk/templates/xform_howto.html:6
 msgid "Build an XLSForm file with 3 tabs 'survey', 'choices', 'settings' "
@@ -342,9 +342,3 @@ msgstr "Supprimer ce formulaire?"
 #: odk/views.py:190
 msgid "Delete this submitted form?"
 msgstr "Supprimer ce formulaire soumis?"
-
-#~ msgid "Load Submitted Data"
-#~ msgstr "Charger les données soumises"
-
-#~ msgid "Insert record"
-#~ msgstr "Insérer un enregistrement"
