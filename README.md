@@ -80,11 +80,11 @@ urlpatterns = [
 ## XForm Create & Load
 Connect to django-odk => **Available form** => Add and follow 4 steps:
 
-1. Build an XLSForm file with 3 tabs 'survey', 'choices', 'settings' [Cfr documentation](https://docs.getodk.org/xlsform/)
+1. Build an XLSForm file with 3 tabs 'survey', 'choices', 'settings' [Cfr documentation](https://docs.getodk.org/xlsform/). Do not forget to add 'today' & 'username' fields in Survey tab!
 
 2. Upload xlsx file (XForm) by clicking on 'Choose file' and Save
 
-3. Convert xlsx file to xml XForm compatible file
+3. Convert xlsx file to xml XForm compatible file [Thanks pyxform!](https://github.com/XLSForm/pyxform)
 
 From this point, you are ready to go with form encoding on your smartphone!
 
@@ -92,14 +92,19 @@ From this point, you are ready to go with form encoding on your smartphone!
 
 > Get, fill-in and submit data [using ODK Collect](https://docs.getodk.org/collect-using/)
 
-4. If you want to get your data back in a model instead of XML content you can run the **CreateModel** step. It will create a model to get your submitted data in a model formatted like your xlsx form. Thanks [pyxform](https://github.com/XLSForm/pyxform)! Model creation is done into `odkdata` app.
+4. If you want to get your data back in a model instead of XML content you can run the **CreateModel** step. It will create a model to get your submitted data in a model formatted like your xlsx form. [Thanks xlsconv](https://github.com/wq/xlsform-converter)! Model creation is done into `odkdata` app.
 
 ## Get submitted data on server
-Go to **Submitted form** menu of your server to see submitted data in XML format.
+Go to **Submitted form** menu of your server to see submitted data in XML format. `Insert in odkdata model` available on record edition.
 
-Insert submitted data through admin module.
+Several record insert is available through admin interface. Select appropriate records (ie: those without insert date) and choose `Insert in odkdata model` from action dropdown list and click on 'Send' button.
 
-Select record or set of records and choose action 'Load Submitted Data'
+## What next?
+Create a new app in you project like `odkdata2` with `templates, views` and `urls` to manage display (with map/export xls/possible update?) of the submitted data through ODK-Collect.
+
+Comments/Improvements welcome!
+
+Investigate [WQ Framework](https://wq.io/) but I still don't see how to deploy offline forms on smartphone.
 
 
 

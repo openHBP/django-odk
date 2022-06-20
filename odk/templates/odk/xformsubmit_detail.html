@@ -36,11 +36,11 @@
             </form>
         {% else %}
             {% if not object.inserted_on %}
-                <a class="btn btn-success" href="{% url 'odk:xformsubmit_load' object.id %}">{% trans 'Insert record' %}</a>
+                <a class="btn btn-success" href="{% url 'odk:xformsubmit_load' object.id %}">{% trans 'Insert' %}</a>
             {% endif %}
-            <a class="btn btn-primary" href="{% url 'odk:xformsubmit_del' object.id %}"><i class="far fa-trash-alt me-2"></i>{% trans 'Delete' %}</a>
+            <a class="btn btn-primary" href="{% url 'odk:xformsubmit_del' object.id %}">{% trans 'Delete' %}</a>
         {% endif %}
-        <a class="btn btn-secondary my-2" href="{% url 'odk:xformsubmit_list' %}"><i class="fas fa-arrow-circle-left me-2"></i>{% trans 'Back' %}</a>
-        
+        <a class="btn btn-secondary my-2" href="{% url 'odk:xformsubmit_list' %}">{% trans 'Back' %}</a>
+        <p>{% blocktrans %}If you want to reload data, set 'inserted on' to null from admin interface or DB and 'Insert' again =>Update{% endblocktrans %}</p>
     {% endif %}
 {% endblock content %}

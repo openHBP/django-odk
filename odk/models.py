@@ -393,7 +393,7 @@ class XFormSubmit(models.Model):
         self._set_version()
         self._set_survey_date()
         self._set_username()
-        self._set_deviceid()
+        # self._set_deviceid()
         old_instanceid = self.instanceid
         self._set_instanceid()
         # check if we have an existing instanceid,

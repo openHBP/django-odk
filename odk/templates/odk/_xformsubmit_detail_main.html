@@ -35,7 +35,7 @@
 
 <div class="row mb-3">
     <div class="col-sm-2 form-label">{% get_verbose_field_name object "submitted_by" %}</div>
-    <div class="col-sm-10 form-input">{{ object.submitted_by }}</div>
+    <div class="col-sm-10 form-input">{{ object.submitted_by|default_if_none:"username not in survey tab of xlsx form" }}</div>
 </div>
 
 <div class="row mb-3">    

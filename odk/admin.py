@@ -9,13 +9,14 @@ from django.utils.timezone import now
 from django.shortcuts import render
 
 from .models import XForm, XFormSubmit
+from odkdata.utils import rm_digit, convert2camelcase
 from odkdata import create_model, load_submit_data
 
 
 ##################
 # XForm
 ##################
-@admin.action(description='Convert XLSX to XML')
+@admin.action(description=_('Convert XLSX to XML'))
 def xform_convert(modeladmin, request, queryset):
     if queryset.count() > 1:
         messages.warning(request, "Please select record to process 1 by 1", fail_silently=True)
@@ -26,7 +27,7 @@ def xform_convert(modeladmin, request, queryset):
         record.save()
 
 
-@admin.action(description='Create Model in odkdata')
+@admin.action(description=_('Create Model in odkdata'))
 def xform_createmodel(modeladmin, request, queryset):
     """
     TODO
@@ -34,7 +35,7 @@ def xform_createmodel(modeladmin, request, queryset):
     and odkdata.create_model.xls2django generate bad initial model name
     """
     if queryset.count() > 1:
-        messages.warning(request, "Please select record to process 1 by 1", fail_silently=True)
+        messages.warning(request, _("Please select 1 record at a time."), fail_silently=True)
         return
     else:
         record = queryset.first()
@@ -43,7 +44,7 @@ def xform_createmodel(modeladmin, request, queryset):
             record.model_created_on = now()
             record.save()
         else:
-            messages.error(request, "Error while creating model")
+            messages.error(request, _("Error while creating model."))
 
 
 class XFormAdmin(admin.ModelAdmin):
@@ -61,17 +62,43 @@ class XFormAdmin(admin.ModelAdmin):
 ##################
 # XFormSubmit
 ##################
+def xformsubmit_return_message(return_value, message, request, obj):
 
-@admin.action(description='Load Submitted Data')
+    pkg_str = rm_digit(obj.form_id).lower()
+    model_str = convert2camelcase(rm_digit(obj.form_id))
+    table_name = model_str.lower()
+
+    if return_value == 1:
+        load_msg = _("Record loaded with success!")
+        messages.success(request, f"{obj} {load_msg}")
+        obj.inserted_on = now()
+        obj.save()
+    elif return_value == -1:
+        messages.error(request, message)
+        messages.info(request, "Compare 'odkdata.models.{pkg_str}' with 'odkdata.models.{pkg_str}_orig'")                             
+        messages.info(request, "odkdata.models.{pkg_str}.{model_str} must have a instanceid field.")
+        messages.info(request, "Open an Issue on GitHub repo with xlsx form in a link.")
+    elif return_value == -2:
+        message = _("table does not exist in the database")
+        messages.error(request, f"'odkdata_{table_name}' {message}")
+        messages.info(request, _("Did you run 'manage.py makemigrations odkdata' then 'manage.py migrate'?"))
+    else:
+        # major failure
+        messages.error(request, message)
+        messages.error(request, f"Error while loading data into 'odkdata.{table_name}', check error logs.")
+
+
+
+@admin.action(description=_('Insert in odkdata model'))
 def xformsubmit_load_data(modeladmin, request, queryset):
-    for record in queryset:
-        load_submit_data.load_record(record)
-        record.inserted_on = now()
-        record.save()
+    for obj in queryset:
+        return_value, message = load_submit_data.load_record(record)
+        xformsubmit_return_message(return_value, message, request, obj)
+
 
 
 class XFormSubmitAdmin(admin.ModelAdmin):
-    list_display = ( 'form_id', 'version', 'xml_file', 'picture_files')
+    list_display = ('id', 'form_id', 'version', 'xml_file', 'inserted_on', 'picture_files')
     list_filter = ('form_id', 'survey_date')
     search_fields = ('xml_file', 'xml_content', 'title',)
     # fields = ['xml_file', 'picture_files']

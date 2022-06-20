@@ -1,13 +1,13 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# FIRST AUTHOR <p.houben@cra.wallonie.be>, 2022-06-20.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-06 11:26+0200\n"
+"POT-Creation-Date: 2022-06-20 15:05+0200\n"
 "PO-Revision-Date: 2021-10-05 17:26+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,272 +18,333 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0\n"
 
-#: source/odk/models.py:78
+#: odk/admin.py:19
+msgid "Convert XLSX to XML"
+msgstr ""
+
+#: odk/admin.py:30
+msgid "Create Model in odkdata"
+msgstr "Créer le modèle dans odkdata"
+
+#: odk/admin.py:38
+msgid "Please select 1 record at a time."
+msgstr "Veuillez sélectionner 1 enregistrement à la fois."
+
+#: odk/admin.py:47
+msgid "Error while creating model."
+msgstr "Erreur lors de la création du modèle."
+
+#: odk/admin.py:72
+msgid "Record loaded with success!"
+msgstr "Enregistrement chargé avec succès!"
+
+#: odk/admin.py:82
+msgid "table does not exist in the database"
+msgstr "n'existe pas dans la base de données"
+
+#: odk/admin.py:84
+msgid ""
+"Did you run 'manage.py makemigrations odkdata' then 'manage.py migrate'?"
+msgstr ""
+"Avez-vous exécuté 'manage.py makemigrations odkdata' puis 'manage.py "
+"migrate'?"
+
+#: odk/admin.py:92
+msgid "Insert in odkdata model"
+msgstr ""
+
+#: odk/models.py:80
 msgid "Excel file"
 msgstr "Fichier Excel"
 
-#: source/odk/models.py:81
+#: odk/models.py:83
 msgid "XLSForm with 3 tabs: survey, choices, settings"
 msgstr "XLSForm avec 3 onglets: survey, choices, settings"
 
-#: source/odk/models.py:84
+#: odk/models.py:86
 msgid "XML file"
 msgstr "Fichier XML"
 
-#: source/odk/models.py:86
+#: odk/models.py:89
 msgid "converted by"
 msgstr "converti par"
 
-#: source/odk/models.py:89
+#: odk/models.py:92
 msgid "Content of XML form"
 msgstr "Contenu du formulaire XML"
 
-#: source/odk/models.py:94 source/odk/models.py:99 source/odk/models.py:104
+#: odk/models.py:97 odk/models.py:102 odk/models.py:107
 msgid "Retrieved from XLSForm (xls settings tab)"
 msgstr "Extrait depuis XLSForm (onglet settings)"
 
-#: source/odk/models.py:102
+#: odk/models.py:105
 msgid "Title"
 msgstr "Titre"
 
-#: source/odk/models.py:108
+#: odk/models.py:111
 msgid "Short description"
 msgstr "Brève description"
 
-#: source/odk/models.py:114
+#: odk/models.py:117
 msgid "Created by"
 msgstr "Créé par"
 
-#: source/odk/models.py:118
+#: odk/models.py:121
 msgid "Created on"
 msgstr "Créé le"
 
-#: source/odk/models.py:124 source/odk/models.py:311
-msgid "Modified by"
-msgstr "Modifié par"
+#: odk/models.py:124
+msgid "Model created on"
+msgstr "Modèle créé le"
 
-#: source/odk/models.py:128 source/odk/models.py:315
-msgid "Modified on"
-msgstr "Modifié le"
-
-#: source/odk/models.py:132 source/odk/templates/home.html:9
+#: odk/models.py:129 odk/templates/home.html:9
 msgid "Available form"
 msgstr "Formulaire disponible"
 
-#: source/odk/models.py:272 source/odk/models.py:277
+#: odk/models.py:272 odk/models.py:277
 msgid "Retrieved from XML form (settings tab of Excel file)"
 msgstr "Extrait du formulaire XML (onglet settings du fichier Excel)"
 
-#: source/odk/models.py:285
+#: odk/models.py:285
 msgid "Encoding date"
 msgstr "Date d'encodage"
 
-#: source/odk/models.py:289
+#: odk/models.py:289
 msgid "Picture file names"
 msgstr "Noms des fichiers d'image"
 
-#: source/odk/models.py:293 source/odk/models.py:319
-#: source/odk/templates/home.html:11
+#: odk/models.py:293 odk/models.py:315 odk/templates/home.html:11
 msgid "Submitted form"
 msgstr "Formulaire soumis"
 
-#: source/odk/models.py:294
+#: odk/models.py:294
 msgid "XML file sended through ODK Collect Mobile App"
 msgstr "Fichier XML envoyé via ODK Collect (Application Mobile)"
 
-#: source/odk/models.py:298
+#: odk/models.py:298
 msgid "Content of XML file submitted"
 msgstr "Contenu du fichier XML soumis"
 
-#: source/odk/models.py:299
+#: odk/models.py:299
 msgid "XML content sended through ODK Collect Mobile App"
 msgstr "Contenu XML envoyé via ODK Collect (Application Mobile)"
 
-#: source/odk/models.py:303
+#: odk/models.py:303
 msgid "Submitted by"
 msgstr "Soumis par"
 
-#: source/odk/models.py:307
+#: odk/models.py:307
 msgid "Submitted on"
 msgstr "Soumis le"
 
-#: source/odk/templates/odk/_xformsubmit_detail_main.html:30
+#: odk/models.py:310
+msgid "Inserted on"
+msgstr "Inséré le"
+
+#: odk/templates/odk/_xformsubmit_detail_main.html:26
 msgid "Picture"
 msgstr "Image"
 
-#: source/odk/templates/odk/xform_detail.html:16
-#: source/odk/templates/odk/xformsubmit_detail.html:10
+#: odk/templates/odk/xform_detail.html:16
+#: odk/templates/odk/xformsubmit_detail.html:10
 msgid "Main"
 msgstr "Général"
 
-#: source/odk/templates/odk/xform_detail.html:19
-#: source/odk/templates/odk/xformsubmit_detail.html:13
+#: odk/templates/odk/xform_detail.html:19
+#: odk/templates/odk/xformsubmit_detail.html:13
 msgid "XML Content"
 msgstr "Contenu XML"
 
-#: source/odk/templates/odk/xform_detail.html:22
-#: source/odk/templates/odk/xformsubmit_detail.html:16
-msgid "Modifications"
-msgstr "Modifications"
+#: odk/templates/odk/xform_detail.html:43
+#: odk/templates/odk/xformsubmit_detail.html:34
+msgid "Yes"
+msgstr ""
 
-#: source/odk/templates/odk/xform_detail.html:50
-#: source/odk/templates/odk/xformsubmit_detail.html:42
+#: odk/templates/odk/xform_detail.html:44
+#: odk/templates/odk/xformsubmit_detail.html:35
 msgid "No/Cancel"
 msgstr "Non/Annuler"
 
-#: source/odk/templates/odk/xform_detail.html:54
-#: source/odk/templates/odk/xform_list.html:8
-msgid "Add"
-msgstr "Ajouter"
-
-#: source/odk/templates/odk/xform_detail.html:55
-msgid "Edit"
-msgstr "Modifier"
-
-#: source/odk/templates/odk/xform_detail.html:56
-#: source/odk/templates/odk/xformsubmit_detail.html:45
+#: odk/templates/odk/xform_detail.html:47
+#: odk/templates/odk/xformsubmit_detail.html:41
 msgid "Delete"
 msgstr "Supprimer"
 
-#: source/odk/templates/odk/xform_detail.html:60
-#: source/odk/templates/odk/xform_list.html:44
-#: source/odk/templates/odk/xform_upload.html:21
-#: source/odk/templates/odk/xform_upload.html:23
-#: source/odk/templates/odk/xformsubmit_detail.html:47
-#: source/odk/templates/odk/xformsubmit_list.html:59
+#: odk/templates/odk/xform_detail.html:51
+#: odk/templates/odk/xform_detail.html:57
+msgid "Wait until the page is refreshed"
+msgstr "Attendre jusqu'à ce que la page soit rafraîchie"
+
+#: odk/templates/odk/xform_detail.html:63 odk/templates/odk/xform_list.html:48
+#: odk/templates/odk/xform_upload.html:25
+#: odk/templates/odk/xform_upload.html:27
+#: odk/templates/odk/xformsubmit_detail.html:43
+#: odk/templates/odk/xformsubmit_list copy.html:59
+#: odk/templates/odk/xformsubmit_list.html:59 odk/templates/xform_doc.html:21
 msgid "Back"
 msgstr "Retour"
 
-#: source/odk/templates/odk/xform_list.html:11
+#: odk/templates/odk/xform_list.html:8
+msgid "Add"
+msgstr "Ajouter"
+
+#: odk/templates/odk/xform_list.html:11
 msgid "Login to add a form"
 msgstr "Se connecter pour ajouter un formulaire"
 
-#: source/odk/templates/odk/xform_list.html:13
-#: source/odk/templates/odk/xformsubmit_list.html:55
+#: odk/templates/odk/xform_list.html:13 odk/templates/odk/xformsubmit_list
+#: copy.html:55 odk/templates/odk/xformsubmit_list.html:55
 msgid "Login"
 msgstr "Connexion"
 
-#: source/odk/templates/odk/xform_list.html:41
+#: odk/templates/odk/xform_list.html:45
 msgid "No form available"
 msgstr "Pas de formulaire disponible"
 
-#: source/odk/templates/odk/xform_upload.html:12
+#: odk/templates/odk/xform_upload.html:11
+msgid "If you have a correct xlsx (XForm) file you can now Upload it"
+msgstr "Si vous avez un fichier xlsx (XForm) correct, vous pouvez le charger"
+
+#: odk/templates/odk/xform_upload.html:15
 msgid "Currently"
 msgstr "Actuellement"
 
-#: source/odk/templates/odk/xform_upload.html:18
-msgid "XML form generated by "
-msgstr "Formulaire XML généré par "
-
-#: source/odk/templates/odk/xform_upload.html:25
+#: odk/templates/odk/xform_upload.html:29
 msgid "Save"
 msgstr "Enregistrer"
 
-#: source/odk/templates/odk/xformsubmit_list.html:10
+#: odk/templates/odk/xformsubmit_detail.html:39
+msgid "Insert"
+msgstr "Insérer"
+
+#: odk/templates/odk/xformsubmit_detail.html:44
+msgid ""
+"If you want to reload data, set 'inserted on' to null from admin interface "
+"or DB and 'Insert' again =>Update"
+msgstr ""
+"Pour recharger les données, mettre le champ 'inserted_on' a null via admin ou DB puis 'Insert' => Update"
+
+#: odk/templates/odk/xformsubmit_list copy.html:10
+#: odk/templates/odk/xformsubmit_list.html:10
 msgid "Submitted forms not present in the database!"
 msgstr "Formulaire soumis absent de la base de données!"
 
-#: source/odk/templates/odk/xformsubmit_list.html:16
+#: odk/templates/odk/xformsubmit_list copy.html:16
+#: odk/templates/odk/xformsubmit_list.html:16
 msgid "Click on load forms to load them in the database"
 msgstr ""
 "Cliquez sur charger le formulaire pour le charger dans la base de données"
 
-#: source/odk/templates/odk/xformsubmit_list.html:18
+#: odk/templates/odk/xformsubmit_list copy.html:18
+#: odk/templates/odk/xformsubmit_list.html:18
 msgid "Load forms"
 msgstr "Charger le formulaire"
 
-#: source/odk/templates/odk/xformsubmit_list.html:45
+#: odk/templates/odk/xformsubmit_list copy.html:45
+#: odk/templates/odk/xformsubmit_list.html:47
 msgid "No submitted forms yet."
 msgstr "Aucun formulaire n'a encore été soumis."
 
-#: source/odk/templates/odk/xformsubmit_list.html:49
+#: odk/templates/odk/xformsubmit_list copy.html:49
 msgid "You must be granted access to view submitted forms."
 msgstr "Vous devez disposer d'un accès pour visualiser les formulaires soumis."
 
-#: source/odk/templates/odk/xformsubmit_list.html:53
+#: odk/templates/odk/xformsubmit_list copy.html:53
+#: odk/templates/odk/xformsubmit_list.html:53
 msgid "Login to view submitted forms"
 msgstr "Connectez-vous pour voir les formulaires soumis"
 
-#: source/odk/templates/xform_howto.html:3
-msgid "How to create an XLSForm?"
-msgstr "Comment créer un XLSForm?"
-
-#: source/odk/templates/xform_howto.html:6
-msgid "Build an XLSForm file with 3 tabs 'survey', 'choices', 'settings' "
-msgstr "Construire un XLSForm avec 3 onglets  'survey', 'choices', 'settings' "
-
-#: source/odk/templates/xform_howto.html:7
-msgid "Submit this file on "
-msgstr "Soumettre ce fichier sur "
-
-#: source/odk/templates/xform_howto.html:8
-msgid "Check file correctness while clicking on 'Preview in browser' button"
-msgstr ""
-"Vérifiez l'exactitude du fichier en cliquant sur le bouton 'Preview in "
-"browser'"
-
-#: source/odk/templates/xform_howto.html:9
-msgid "Download the generated XForm file (XML file) on your computer"
-msgstr "Téléchargez le fichier XForm généré (XML) sur votre ordinateur"
-
-#: source/odk/templates/xform_howto.html:10
-msgid "Load this xml file by clicking on 'Choose file'"
-msgstr "Charger ce fichier xml en cliquant sur 'Choose file'"
-
-#: source/odk/templates/xform_howto.html:11
-msgid "Click on save button"
-msgstr "Cliquer sur le bouton Enregistrer"
-
-#: source/odk/templates/xform_howto.html:18
+#: odk/templates/xform_doc.html:10
 msgid "What is an XLSForm?"
 msgstr "Qu'est-ce qu'un XLSForm?"
 
-#: source/odk/templates/xform_howto.html:20
+#: odk/templates/xform_doc.html:12
 msgid "XLSForm Documentation"
 msgstr "Documentation XLSForm"
 
-#: source/odk/templates/xform_howto.html:23
+#: odk/templates/xform_doc.html:15
 msgid "XLSForm example"
 msgstr "Example XLSForm"
 
-#: source/odk/templates/xform_howto.html:25
+#: odk/templates/xform_doc.html:17
 msgid "ODK XForms Specifications"
 msgstr "Spécification ODK XForms"
 
-#: source/odk/utils.py:105
+#: odk/templates/xform_howto.html:3
+msgid "STEPS"
+msgstr ""
+
+#: odk/templates/xform_howto.html:6
+msgid "Build an XLSForm file with 3 tabs 'survey', 'choices', 'settings' "
+msgstr "Construire un XLSForm avec 3 onglets  'survey', 'choices', 'settings' "
+
+#: odk/templates/xform_howto.html:7
+msgid "Upload xlsx file (XForm) by clicking on 'Choose file' and Save"
+msgstr ""
+"Charger un fichier xlsx (XForm) en cliquant sur 'Choose file' puis "
+"'Enregistrer'"
+
+#: odk/templates/xform_howto.html:8
+msgid "Convert xlsx file to xml compatible file"
+msgstr "Convertir un fich xlsx au format xml compatible"
+
+#: odk/templates/xform_howto.html:9
+msgid "Create final storage model"
+msgstr "Créer le modèle de stockage final"
+
+#: odk/utils.py:84
 msgid "File not found"
 msgstr "Fichier non trouvé"
 
-#: source/odk/utils.py:117
+#: odk/utils.py:96
 msgid "Key elements (form_id - version) not found"
 msgstr "Éléments clés (form_od - version) non trouvés"
 
-#: source/odk/views.py:40
+#: odk/utils.py:184
+msgid "Well sent! Thanks!"
+msgstr "Bien envoyé! Merci!"
+
+#: odk/views.py:30
 msgid "Welcome on django-odk"
 msgstr "Bienvenue sur CP-Collect"
 
-#: source/odk/views.py:41
+#: odk/views.py:31
 msgid "Collection of geolocalized data."
 msgstr "Collecte de données géolocalisées à caractère agronomique."
 
-#: source/odk/views.py:75
+#: odk/views.py:50
+msgid "XForm Documentation"
+msgstr "Documentation XLSForm"
+
+#: odk/views.py:72
+msgid "XLSX successfully converted to XML XForm format."
+msgstr "XLSX converti au format XML XForm avec succès."
+
+#: odk/views.py:76
+msgid "created with success!"
+msgstr "créé avec succès!"
+
+#: odk/views.py:78
+msgid ""
+"You can now run 'manage.py makemigrations odkdata' then 'manage.py migrate'."
+msgstr ""
+"Vous pouvez maintenant exécuter 'manage.py makemigrations odkdata' puis "
+"'manage.py migrate'?"
+
+#: odk/views.py:114
 msgid "XForm create & load"
 msgstr "Creation & chargement de fichiers XForm"
 
-#: source/odk/views.py:88
-msgid "XForm loaded"
-msgstr "XForm chargé"
-
-#: source/odk/views.py:99
+#: odk/views.py:125
 msgid "Delete this form?"
 msgstr "Supprimer ce formulaire?"
 
-#: source/odk/views.py:151
+#: odk/views.py:190
 msgid "Delete this submitted form?"
 msgstr "Supprimer ce formulaire soumis?"
 
-#~ msgid "Logout"
-#~ msgstr "Déconnexion"
+#~ msgid "Load Submitted Data"
+#~ msgstr "Charger les données soumises"
 
-#~ msgid "Submitted forms"
-#~ msgstr "Formulaires soumis"
+#~ msgid "Insert record"
+#~ msgstr "Insérer un enregistrement"

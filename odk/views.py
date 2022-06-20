@@ -1,23 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-odk.views description
-"""
-__author__ = 'hbp'
-__email__ = 'p.houben@cra.wallonie.be'
-__copyright__ = 'Copyright 2017, Patrick Houben'
-__license__ = 'GPLv3'
-__date__ = '2021-07-07'
-__version__ = '1.0'
-__status__ = 'Development'
-
 import os
 import logging
-# from lxml import etree # pretty display XML (submit)
-# with python 3.9 we can use => import xml.etree.ElementTree as ET
-# https://stackoverflow.com/questions/749796/pretty-printing-xml-in-python
 
 from braces.views import LoginRequiredMixin
-
+# django modules
 from django.utils.translation import gettext as _
 from django.utils.timezone import now
 from django.contrib.auth.decorators import login_required
@@ -26,12 +12,14 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-
-
+# odk modules
 from .storage import overwrite_storage
 from .models import XForm, XFormSubmit, xform_path
 from .forms import OdkForm
+from .admin import xformsubmit_return_message
+# odkdata modules
 from odkdata import create_model, load_submit_data
+from odkdata.utils import rm_digit, convert2camelcase
 
 
 LOG = logging.getLogger(__name__)
@@ -87,7 +75,7 @@ class XFormDetailView(OdkGenView, generic.DetailView):
                 model_name = create_model.rm_digit(obj.form_id).capitalize()
                 create_msg = _("created with success!")
                 messages.success(request, f"Model odkdata.models.{model_name} {create_msg}")
-                messages.success(request, _("You can now run manage.py makemigrations odkdata followed by migrate."))
+                messages.info(request, _("You can now run 'manage.py makemigrations odkdata' then 'manage.py migrate'."))
                 obj.model_created_on = now()
                 obj.save()
                 return redirect(obj.get_absolute_url())
@@ -164,15 +152,10 @@ class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
         obj = self.get_object()
 
         if 'loaddata/' in request.path:
-            if load_submit_data.load_record(obj):
-                load_msg = _("Record loaded with success!")
-                messages.success(request, f"{obj} {load_msg}")
-                obj.is_inserted = True
-                obj.inserted_on = now()
-                obj.save()
-                return redirect(obj.get_absolute_url())
-            else:
-                messages.error(request, "Error while loading data into odkdata model, check your error logs.")
+            return_value, message = load_submit_data.load_record(obj)
+            
+            xformsubmit_return_message(return_value, message, request, obj)
+
         return super().get(request, *args, **kwargs)   
 
 

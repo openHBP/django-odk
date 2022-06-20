@@ -22,9 +22,9 @@
     
     <div class="mt-2">
       {% if pk %}
-        <a class="btn btn-secondary" href="{% url 'odk:xform_detail' pk %}" role="button"><i class="fas fa-arrow-circle-left me-2"></i>{% trans "Back" %}</a>
+        <a class="btn btn-secondary" href="{% url 'odk:xform_detail' pk %}" role="button">{% trans "Back" %}</a>
       {% else %}
-        <a class="btn btn-secondary" href="{% url 'odk:xform_list' %}" role="button"><i class="fas fa-arrow-circle-left me-2"></i>{% trans "Back" %}</a>
+        <a class="btn btn-secondary" href="{% url 'odk:xform_list' %}" role="button">{% trans "Back" %}</a>
       {% endif %}
       <button type="submit" class="btn btn-primary"><i class="far fa-save me-2"></i>{% trans "Save" %}</button>
     </div>

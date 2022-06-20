@@ -6,6 +6,7 @@ from django.core.management import call_command
 from xlsconv.django import xls2django
 from config.settings import MEDIA_ROOT
 from odk.models import XForm
+from odkdata.utils import rm_digit, convert2camelcase
 
 
 odkdata_dir = os.path.dirname(__file__)
@@ -13,9 +14,6 @@ odkdata_dir = os.path.dirname(__file__)
 
 LOG = logging.getLogger(__name__)
 
-def rm_digit(mystr):
-    strnew = ''.join([i for i in mystr if not i.isdigit()])
-    return strnew
 
 
 def get_last_file():
@@ -50,12 +48,13 @@ def get_xlsx_path(xform):
     return xls_path, xls_name, xls_root
     
 
-def append_init_file(model_name):
+def append_init_file(pkg_name):
     """
     Check init content and add new model declaration if absent
     """
+    model_name = convert2camelcase(pkg_name)
     path = os.path.join(odkdata_dir, 'models', '__init__.py')
-    newline = f"from odkdata.models.{model_name} import {model_name.capitalize()}\n"
+    newline = f"from odkdata.models.{pkg_name} import {model_name}\n"
 
     try:
         with open(path, "r") as init_file_r:
@@ -68,7 +67,7 @@ def append_init_file(model_name):
             init_file.write(newline)
 
 
-def model_correction(model_path, form_id):
+def model_correction(pkg_path, form_id):
     """
     Loop through model created by xlsconv.django.xls2django
     an rewrite it with 3 changes
@@ -76,20 +75,20 @@ def model_correction(model_path, form_id):
     2. create UUID field instanceid
     3. add "null=True, blank=True" for srid field
     """
-    old_name = form_id
-    new_name = rm_digit(form_id)
+    old_name = convert2camelcase(form_id)
+    new_name = convert2camelcase(rm_digit(form_id))
 
-    path_old = model_path
-    path_new = f"{odkdata_dir}/models/{new_name}.py"
+    path_old = pkg_path
+    path_new = f"{odkdata_dir}/models/{rm_digit(form_id)}.py"
     sp4 = "    "
     try:
         with open(path_old, "r") as f_old, open(path_new, "w") as f_new:
             for line in f_old:
                 # replace all old_name to new_name
-                line = line.replace(old_name.capitalize(), new_name.capitalize()).replace(old_name.lower(), new_name.lower())
+                line = line.replace(old_name, new_name).replace(old_name.lower(), new_name.lower())
                 f_new.write(line)
 
-                if f"class {new_name.capitalize()}(models.Model):\n" in line:
+                if f"class {new_name}(models.Model):\n" in line:
                     f_new.write(f"{sp4}instanceid = models.UUIDField(unique=True)\n")
                 if 'srid=4326,' in line:
                     f_new.write(f"{sp4}{sp4}null=True, blank=True,\n")
@@ -111,14 +110,14 @@ def process(xform=None):
         
     # 1. Init vars
     xls_path = xform.xls_file.path
-    model_name = rm_digit(xform.form_id)
+    pkg_name = rm_digit(xform.form_id)
     
-    model_path = os.path.join(odkdata_dir, 'models', f"{model_name}_orig.py")
+    pkg_path = os.path.join(odkdata_dir, 'models', f"{pkg_name}_orig.py")
 
     # 2. xls2django
     fpointer = xls2django(xls_path)
     try:
-        with open(model_path, "w") as fmodel:
+        with open(pkg_path, "w") as fmodel:
             print(fpointer, file=fmodel)
     except (IOError, OSError) as e:
         LOG.error(e)
@@ -126,13 +125,13 @@ def process(xform=None):
 
     # 3. Append_init
     try:
-        append_init_file(model_name)
+        append_init_file(pkg_name)
     except Exception as xcpt:
         LOG.error(xcpt)
         return False
     
     # 4. Model correction
-    if not model_correction(model_path, xform.form_id):
+    if not model_correction(pkg_path, xform.form_id):
         return False
 
     return True
