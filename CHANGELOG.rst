@@ -58,5 +58,5 @@ Changes
 * rm modified_on & modified_by field
 * add convert xls 2 xml (use of pxforms)
 * new odkdata app with 2 methods: create_model (use of xlsconv) & load_submit_data
-* add boolean fields in XForm & XFormSubmit to check data convert & data load_submit_data
+* add datetime fields in XForm & XFormSubmit to check data convert & data load_submit_data
 * modify view for Odk load with 4 steps (cfr. README file)

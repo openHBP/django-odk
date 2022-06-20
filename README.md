@@ -99,29 +99,10 @@ Go to **Submitted form** menu of your server to see submitted data in XML format
 
 Several record insert is available through admin interface. Select appropriate records (ie: those without insert date) and choose `Insert in odkdata model` from action dropdown list and click on 'Send' button.
 
-## What next?
+# What next?
 Create a new app in you project like `odkdata2` with `templates, views` and `urls` to manage display (with map/export xls/possible update?) of the submitted data through ODK-Collect.
 
 Comments/Improvements welcome!
 
 Investigate [WQ Framework](https://wq.io/) but I still don't see how to deploy offline forms on smartphone.
-
-# Further notes (new release objective)
-
-## Convert XLSForm (xlsx) to xml on the fly
-Cfr. https://github.com/XLSForm/pyxform
-Once your virtualenv is activated and **pyxform** installed, run
-```sh
-xls2xform "/var/www/app/media/XForm/pdt.xlsx" "pdt.xml"
-```
-It will generate the XML form for ODK-Collect
-
-## Convert XML to python model
-Cfr. https://github.com/wq/xlsform-converter
-
-Once your virtualenv is activated and **xlsconv** installed, run
-```sh
-xls2django my-odk-survey.xls > myapp/models.py
-```
-It will generate the target model automatically!
 
