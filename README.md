@@ -25,7 +25,8 @@ $ python manage.py createsuperuser
 ```py
 INSTALLED_APPS = (
     ...
-    'django_odk',
+    'odk',
+    'odkdata,
 )
 ```
 
