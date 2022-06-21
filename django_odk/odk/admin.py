@@ -75,9 +75,7 @@ def xformsubmit_return_message(return_value, message, request, obj):
         obj.save()
     elif return_value == -1:
         messages.error(request, message)
-        messages.info(request, "Compare 'odkdata.models.{pkg_str}' with 'odkdata.models.{pkg_str}_orig'")                             
-        messages.info(request, "odkdata.models.{pkg_str}.{model_str} must have a instanceid field.")
-        messages.info(request, "Open an Issue on GitHub repo with xlsx form in a link.")
+        messages.info(request, "Try xls2xform (pyxform package) in cmd line")
     elif return_value == -2:
         message = _("table does not exist in the database")
         messages.error(request, f"'odkdata_{table_name}' {message}")

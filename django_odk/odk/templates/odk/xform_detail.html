@@ -35,7 +35,7 @@ textarea {
 
 
 <div class="m-2">
-{% if user.is_authenticated %}
+{% if user.is_authenticated and user.is_odk_admin %}
     {% if "/delete" in request.path %}
         <br />
         <h4 class="text-danger">{{view.confirm_message}}</h4>

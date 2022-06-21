@@ -35,13 +35,16 @@ htmlcov
 *.pot
 
 # folder to be ignored
-source/
+django_odk/config/
+django_odk/locale/
+django_odk/static/
+django_odk/templates/
+manage.py
 media/
 node_modules/
 zcheck/
 build/
 dist/
-doc/
 django_odk.egg-info
 
 

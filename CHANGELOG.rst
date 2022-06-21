@@ -60,3 +60,10 @@ Changes
 * new odkdata app with 2 methods: create_model (use of xlsconv) & load_submit_data
 * add datetime fields in XForm & XFormSubmit to check data convert & data load_submit_data
 * modify view for Odk load with 4 steps (cfr. README file)
+
+1.0.0 (2022-06-21)
+------------------
+* make xml_content and created_by field as null in order to upload and then process!
+* force odkdata/migrations & odkdata/models to git
+* add is_odk_admin check in template
+* change message when error App does not exist in model

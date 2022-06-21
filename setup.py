@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 from setuptools import setup
 
-import odk
+import django_odk
+
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -29,7 +30,7 @@ CLASSIFIERS = [
 
 setup(
     name='django-odk',
-    version=odk.__version__,
+    version=django_odk.__version__,
     description='Django Data Collection tool using ODK Collect mobile App',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -37,8 +38,10 @@ setup(
     author='Patrick HOUBEN',
     author_email='p.houben@cra.wallonie.be',
     license='GPL-3.0-or-later',
-    packages=['odk', 'odkdata', 'odk.openrosa'],
-    # package_data={'static':['*'], 'templates':['*'], 'templatestags':['*'],},
+    packages=['odk', 'odk.openrosa', 'odk.locale', 'odk.migrations', 'odk.templates', 'odk.templatetags',
+        'odkdata', 'odkdata.models', 'odkdata.migrations'],
+    package_dir={"":"django_odk"},
+    package_data={'xform_sample':['*'], 'doc':['*'],},
     include_package_data=True,
     install_requires=REQUIREMENTS,
     classifiers=CLASSIFIERS,

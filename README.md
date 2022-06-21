@@ -6,7 +6,10 @@ Django data collection tool using [ODK-collect](https://play.google.com/store/ap
 - Django web site up and running
 - Smartphone or tablet with [ODK-Collect installed](https://play.google.com/store/apps/details?id=org.odk.collect.android&hl=en_US&gl=US)
 - Set of forms in [Xforms](https://xlsform.org/en/) format available in xml. Use https://getodk.org/xlsform/ to validate and export your forms in xml format.
-- Database up & running **with vector geodatabase functionality** (if your ODK form use geopoint): PostGIS, Oracle Spatial, SQLite/SpatiaLite
+
+NEW from version 0.3.3 (xls2xml & create final model)
+- Since most of Xforms are using `geopoint`, the database must be set up **with vector geodatabase functionality**: PostGIS, Oracle Spatial, SQLite/SpatiaLite
+- **Java Runtime Environment (JRE)** installed `$ sudo apt install default-jre` for XForm validation used by [xlsconv](https://github.com/wq/xlsform-converter)
 
 
 ## Installation
@@ -22,8 +25,7 @@ $ python manage.py createsuperuser
 ```py
 INSTALLED_APPS = (
     ...
-    'odk',
-    'odkdata',
+    'django_odk',
 )
 ```
 

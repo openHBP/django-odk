@@ -89,7 +89,8 @@ class XForm(models.Model):
         help_text="XLSForm "+_("converted by")+" <a href='https://getodk.org/xlsform/' target='_blank'>https://getodk.org/xlsform/</a>"
     )
     xml_content = models.TextField(
-        verbose_name=_("Content of XML form")
+        verbose_name=_("Content of XML form"),
+        blank=True, null=True,
     )
     form_id = models.SlugField(
         editable=False,
@@ -114,7 +115,8 @@ class XForm(models.Model):
     created_by = models.ForeignKey(
         Profile,
         related_name="xform_created_by",
-        on_delete=models.CASCADE, verbose_name=_("Created by")
+        on_delete=models.CASCADE, verbose_name=_("Created by"),
+        blank=True, null=True,
     )
     created_on = models.DateTimeField(
         auto_now_add=True,

@@ -12,6 +12,6 @@ Release logic:
  9. twine upload dist/django-filer-{new version}.tar.gz
 """
 
-__version__ = "0.3.3"
+__version__ = "1.0.0"
 __author__ = 'Patrick HOUBEN'
 __credits__ = 'Walloon Agricultural Research Centre'

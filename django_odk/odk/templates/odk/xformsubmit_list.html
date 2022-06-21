@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load i18n static model_tags %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  {% if user.is_odk_admin or user.is_odk_user %}
+    {% if object_list %}
+      <table id="object_list" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>{% get_verbose_field_name object_list "form_id" %}</th>
+          <th>{% get_verbose_field_name object_list "version" %}</th>
+          <th>{% get_verbose_field_name object_list "xml_file" %}</th>
+          <th>{% get_verbose_field_name object_list "submitted_on" %}</th>
+          <th>{% get_verbose_field_name object_list "inserted_on" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+          {% for i in object_list %}
+              <tr>
+              <td><a href="{{ i.get_absolute_url }}">{{ i.form_id }}</a></td>
+              <td>{{ i.version }}</td>
+              <td><a href="{{ i.xml_file.url }}" target="_blank">{{ i.xml_file }}</a></td>
+              <td>{{ i.submitted_on }}</td>
+              <td>{{ i.inserted_on|date:"Y-m-d H:i:s" }}</td>
+              </tr>
+          {% endfor %}
+      </tbody>
+      </table>
+    {% else %}
+        <br/>
+        <h4>{% trans "No submitted forms yet." %}</h4>
+    {% endif %}
+  
+  {% else %}
+    <p>{% trans "You must be granted access to view submitted forms." %}</p>
+  {% endif %} 
+
+    
+
+{% else %}
+  <p>{% trans "Login to view submitted forms" %}</p>
+  <form class="form-inline ml-auto">
+    <a href="{% url 'admin:login' %}" class="btn btn-primary">{% trans "Login" %}</a>
+  </form>
+{% endif %}
+
+<a class="btn btn-secondary" href="{% url 'odk:home' %}">{% trans 'Back' %}</a>
+{% endblock %}

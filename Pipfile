@@ -12,6 +12,7 @@ django-braces = "*"
 psycopg2 = "*"
 pillow = "*"
 lxml = "*"
+django-odk = {editable = true, path = "."}
 
 [dev-packages]
 pylint-django = "*"
