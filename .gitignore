@@ -30,6 +30,9 @@ npm-debug.log*
 nosetests.xml
 htmlcov
 
+# files
+todo_list.md
+
 # Translations
 *.mo
 *.pot

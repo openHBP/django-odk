@@ -37,6 +37,8 @@ def fetch_xml_data(xfs, model):
                     
         if fname == 'instanceid':
             value = xfs.instanceid
+        elif fname == 'xfs':
+            value = xfs
         else:
             if isinstance(field, ManyToOneRel):
                 itemtag = soup.find_all(fname)

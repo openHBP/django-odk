@@ -5,9 +5,9 @@ Django data collection tool using [ODK-collect](https://play.google.com/store/ap
 ## Prerequisite
 - Django web site up and running
 - Smartphone or tablet with [ODK-Collect installed](https://play.google.com/store/apps/details?id=org.odk.collect.android&hl=en_US&gl=US)
-- Set of forms in [Xforms](https://xlsform.org/en/) format available in xml. Use https://getodk.org/xlsform/ to validate and export your forms in xml format.
+- [XLSForm](https://xlsform.org/en/) file with 3 tabs 'survey', 'choices', 'settings'
 
-NEW from version 0.3.3 (xls2xml & create final model)
+NEW from version 1.0.2 (xls2xml & create final model)
 - Since most of Xforms are using `geopoint`, the database must be set up **with vector geodatabase functionality**: PostGIS, Oracle Spatial, SQLite/SpatiaLite
 - **Java Runtime Environment (JRE)** installed `$ sudo apt install default-jre` for XForm validation used by [xlsconv](https://github.com/wq/xlsform-converter)
 
@@ -26,7 +26,7 @@ $ python manage.py createsuperuser
 INSTALLED_APPS = (
     ...
     'odk',
-    'odkdata,
+    'odkdata',
 )
 ```
 
@@ -36,8 +36,7 @@ INSTALLED_APPS = (
 LOCALE_PATHS = [os.path.join(BASE_DIR, 'odk', 'locale')]
 
 LANGUAGE_CODE = 'en'
-# LANGUAGE_CODE = 'fr'
-# possible LANGUAGE_CODE on 05/10/2021 are: en, fr
+# translated LANGUAGE_CODE: fr
 ```
 
 * Add appropriate AUTH_USER_MODEL in settings.py

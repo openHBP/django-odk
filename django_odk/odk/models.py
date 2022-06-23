@@ -9,8 +9,9 @@ from pyxform.xls2xform import xls2xform_convert
 from hashlib import md5
 from datetime import datetime
 
+from django.db.models.signals import post_save
 from django.db import models
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
@@ -386,28 +387,6 @@ class XFormSubmit(models.Model):
         url_path = self.xml_file.url.replace('.xml', '/')
         return url_path
 
-    def save(self, *args, **kwargs):
-        """
-        Save form_id, instanceid contained in xml file
-        """
-        self._set_xml_content()
-        self._set_form_id()
-        self._set_version()
-        self._set_survey_date()
-        self._set_username()
-        # self._set_deviceid()
-        old_instanceid = self.instanceid
-        self._set_instanceid()
-        # check if we have an existing instanceid,
-        # if so, the one must match but only if xformsubmit is NOT new
-        if self.pk and old_instanceid and old_instanceid.__str__() != self.instanceid:
-            raise Exception(
-                f"Your updated form's instanceid '{self.instanceid}' must match the existing forms' instanceid '{old_instanceid}'."
-                  )
-
-        super(XFormSubmit, self).save(*args, **kwargs)
-        return
-
     def get_absolute_url(self):
         return reverse('odk:xformsubmit_detail', args=[str(self.id)])
 
@@ -416,3 +395,27 @@ class XFormSubmit(models.Model):
 
     def __str__(self):
         return self.xml_file.name
+
+
+#################
+# SIGNALS
+#################
+
+def fillin_xml_fields(instance, created, **kwargs):
+    """
+    based on xml file uploaded, fillin form_id, version, xml_content, username and instanceid
+    done in post_save signal with created flag in order to allow modification in Db via Django Admin
+    """    
+    if created:
+        # try:
+        instance._set_xml_content()
+        instance._set_form_id()
+        instance._set_version()
+        instance._set_survey_date()
+        instance._set_username()
+        instance._set_instanceid()
+        instance.save()
+        # except Exception as xcpt:
+        #     raise Exception(xcpt)
+
+post_save.connect(receiver=fillin_xml_fields, sender=XFormSubmit, weak=False)

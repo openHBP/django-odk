@@ -53,7 +53,7 @@ Changes
 ------------------
 * add md5: string in <hash> tag of xformsList.xml
 
-0.3.3 (2022-06-18)
+1.0.0 (2022-06-18)
 ------------------
 * rm modified_on & modified_by field
 * add convert xls 2 xml (use of pxforms)
@@ -71,3 +71,12 @@ Changes
 1.0.2 (2022-06-21)
 ------------------
 * Add 'doc' and 'xform_sample' folder
+
+1.0.3 (2022-06-23)
+------------------
+* ReadMe corrections
+* Add xfs OneToOneField field between final model and odk.XFormSubmit
+* Add 'doc' and 'xform_sample' folder
+* Bug in odk.admin for action: xformsubmit_load_data
+* Add post-save signal on XFormSubmit model
+* Change gettext into gettext_lazy in odk.models

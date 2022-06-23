@@ -88,10 +88,14 @@ def model_correction(pkg_path, form_id):
                 line = line.replace(old_name, new_name).replace(old_name.lower(), new_name.lower())
                 f_new.write(line)
 
+                if "from django.contrib.gis.db import models" in line:
+                    f_new.write("from odk.models import XFormSubmit")
                 if f"class {new_name}(models.Model):\n" in line:
+                    f_new.write(f"{sp4}xfs = models.OneToOneField(XFormSubmit, on_delete=models.CASCADE, primary_key=True)\n")
                     f_new.write(f"{sp4}instanceid = models.UUIDField(unique=True)\n")
                 if 'srid=4326,' in line:
-                    f_new.write(f"{sp4}{sp4}null=True, blank=True,\n")
+                    f_new.write(f"{sp4}{sp4}null=True, blank=True,\n")  
+
     except (IOError, OSError) as e:
         LOG.error(e)
         return False

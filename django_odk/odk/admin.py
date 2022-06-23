@@ -6,7 +6,6 @@ from django.contrib import admin
 from django.contrib import messages
 from django.utils.translation import gettext as _
 from django.utils.timezone import now
-from django.shortcuts import render
 
 from .models import XForm, XFormSubmit
 from odkdata.utils import rm_digit, convert2camelcase
@@ -75,7 +74,8 @@ def xformsubmit_return_message(return_value, message, request, obj):
         obj.save()
     elif return_value == -1:
         messages.error(request, message)
-        messages.info(request, "Try xls2xform (pyxform package) in cmd line")
+        messages.info(request, "Did you create the model from 'Available form' menu or Admin?")
+        messages.info(request, "If you just pip install django-odk, stop-start wsgi or gunicorn")
     elif return_value == -2:
         message = _("table does not exist in the database")
         messages.error(request, f"'odkdata_{table_name}' {message}")
@@ -90,7 +90,7 @@ def xformsubmit_return_message(return_value, message, request, obj):
 @admin.action(description=_('Insert in odkdata model'))
 def xformsubmit_load_data(modeladmin, request, queryset):
     for obj in queryset:
-        return_value, message = load_submit_data.load_record(record)
+        return_value, message = load_submit_data.load_record(obj)
         xformsubmit_return_message(return_value, message, request, obj)
 
 
