@@ -80,3 +80,9 @@ Changes
 * Bug in odk.admin for action: xformsubmit_load_data
 * Add post-save signal on XFormSubmit model
 * Change gettext into gettext_lazy in odk.models
+
+1.1.0 (2022-06-24)
+------------------
+* Add functions in odkdata.create_model
+* Adapt messages for Submitted forms query set (odk.admin.py)
+* Rm submission_path from odk.models

@@ -61,37 +61,53 @@ class XFormAdmin(admin.ModelAdmin):
 ##################
 # XFormSubmit
 ##################
-def xformsubmit_return_message(return_value, message, request, obj):
-
-    pkg_str = rm_digit(obj.form_id).lower()
-    model_str = convert2camelcase(rm_digit(obj.form_id))
-    table_name = model_str.lower()
-
-    if return_value == 1:
-        load_msg = _("Record loaded with success!")
-        messages.success(request, f"{obj} {load_msg}")
-        obj.inserted_on = now()
-        obj.save()
-    elif return_value == -1:
+def xformsubmit_error(return_value, message, request, table_name):
+    """Use only if return_value < 0"""
+    if return_value == -1:
         messages.error(request, message)
         messages.info(request, "Did you create the model from 'Available form' menu or Admin?")
-        messages.info(request, "If you just pip install django-odk, stop-start wsgi or gunicorn")
+        messages.info(request, "After 'pip install django-odk' need to stop-start wsgi or gunicorn instead of restart")
     elif return_value == -2:
-        message = _("table does not exist in the database")
-        messages.error(request, f"'odkdata_{table_name}' {message}")
-        messages.info(request, _("Did you run 'manage.py makemigrations odkdata' then 'manage.py migrate'?"))
-    else:
-        # major failure
+        messages.error(request, f"'odkdata_{table_name}' table does not exist in the database")
+        messages.info(request, "Did you run 'manage.py makemigrations odkdata' then 'manage.py migrate'?")
+
+
+def xformsubmit_return_message(ok_list, ko_list, message, request, table_name):
+    if ok_list:
+        messages.success(request, f"id {ok_list} loaded with success!")
+    if ko_list:
         messages.error(request, message)
-        messages.error(request, f"Error while loading data into 'odkdata.{table_name}', check error logs.")
+        messages.error(request, f"id {ko_list} error - check error logs - correct xml_content")
 
 
 
 @admin.action(description=_('Insert in odkdata model'))
 def xformsubmit_load_data(modeladmin, request, queryset):
+    ok_list = []
+    ko_list = []
+    nbr = 0
     for obj in queryset:
+        nbr += 1
+        if nbr == 1:
+            table_name = convert2camelcase(rm_digit(obj.form_id)).lower()
+
         return_value, message = load_submit_data.load_record(obj)
-        xformsubmit_return_message(return_value, message, request, obj)
+        
+        # return_value < 0 => major issue stop loop
+        if return_value < 0:
+            xformsubmit_error(return_value, message, request, table_name)
+            break
+        
+        # return_value 0 (error ko) or 1 (ok)
+        if return_value == 1:
+            ok_list.append(obj.id)
+            obj.inserted_on = now()
+            obj.save()
+        else:
+            ko_list.append(obj.id)
+
+
+    xformsubmit_return_message(ok_list, ko_list, message, request, table_name)
 
 
 

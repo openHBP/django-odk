@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from django.apps import apps
 from django.db import connection
 from django.contrib.gis.geos.point import Point
-from django.db.models import ManyToOneRel, IntegerField
+from django.db.models import ManyToOneRel, IntegerField, ImageField
 from django.contrib.gis.db.models import PointField
 
 from odk.models import XFormSubmit
@@ -126,20 +126,23 @@ def load_record(xfs):
             values = values.strip("\n") # rm leading and trailing \n
             values_list = values.split("\n")
             
-            fields = [i.name for i in obj._meta.get_fields() if i.name not in ('id', model_str_lower)]
+            fields = [i for i in obj._meta.get_fields() if i.name not in ('id', model_str_lower)]
             n = 0
             objdict = {}
-            for f in fields:
+            for field in fields:
+                # Get value from values_list
                 try:
                     value = values_list[n]
                 except IndexError:
-                    LOG.error(f"fields: {fields}")
-                    LOG.error(f"fields number of items: {len(fields)}")
-                    LOG.error(f"values_list: {values_list}")
-                    LOG.error(f"values_list number of items: {len(values_list)}")
-                    return 0, f"IndexError between {fields} and {values_list}"
+                    error_msg = f"id [{xfs.id}] - IndexError between {fields} and {values_list} - check and correct xml_content or xlsx form (required fields)"
+                    return 0, error_msg
 
-                objdict[f] = value
+                # Particular case for ImageField
+                if isinstance(field, ImageField):
+                    xml_file_path = str(xfs.xml_file).replace('.xml','')
+                    value = f"{xml_file_path}/{value}"
+
+                objdict[field.name] = value
                 n += 1
             
             # Add instance of main model

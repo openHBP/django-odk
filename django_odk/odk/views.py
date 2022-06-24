@@ -16,7 +16,7 @@ from django.http import HttpResponseRedirect
 from .storage import overwrite_storage
 from .models import XForm, XFormSubmit, xform_path
 from .forms import OdkForm
-from .admin import xformsubmit_return_message
+from .admin import xformsubmit_return_message, xformsubmit_error
 # odkdata modules
 from odkdata import create_model, load_submit_data
 from odkdata.utils import rm_digit, convert2camelcase
@@ -152,9 +152,20 @@ class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
         obj = self.get_object()
 
         if 'loaddata/' in request.path:
+            ok_list = []
+            ko_list = []
             return_value, message = load_submit_data.load_record(obj)
-            
-            xformsubmit_return_message(return_value, message, request, obj)
+            table_name = convert2camelcase(rm_digit(obj.form_id)).lower()
+            if return_value < 0:
+                xformsubmit_error(return_value, message, request, table_name)
+            else:
+                if return_value == 1:
+                    ok_list.append(obj.id)
+                    obj.inserted_on = now()
+                    obj.save()
+                else:
+                    ko_list.append(obj.id)
+                xformsubmit_return_message(ok_list, ko_list, message, request, table_name)
 
         return super().get(request, *args, **kwargs)   
 

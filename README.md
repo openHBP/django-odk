@@ -46,12 +46,31 @@ AUTH_USER_MODEL = 'auth.user'
 
 * For a more interactive app, configure **logging** as explained in [Lincoln Loop](https://lincolnloop.com/blog/django-logging-right-way/) and **messages** as explained in [Django](https://docs.djangoproject.com/en/4.0/ref/contrib/messages/)
 
+* For **logging**, add `odk` and `odkdata` entry to `loggers` key of your logging file and adapt `handlers` according to yours.
+```py
+    'loggers': {
+        ...
+        'odk': {
+            'handlers': ['console', 'debugger', 'warning', 'error'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'odkdata': {
+            'handlers': ['console', 'debugger', 'warning', 'error'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+    }
+```
 
-* Add **is_odk_admin** property to your AUTH_USER_MODEL (django.contrib.auth.models file or specific accounts.models)
+* Add **is_odk_admin** and **is_odk_user** property to your AUTH_USER_MODEL (django.contrib.auth.models file or specific accounts.models)
 ```py
     @property
     def is_odk_admin(self):
         return self.groups.filter(name='odk-admin').exists()
+    @property
+    def is_odk_user(self):
+        return self.groups.filter(name='odk-user').exists()        
 ```
 
 

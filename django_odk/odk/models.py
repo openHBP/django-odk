@@ -7,7 +7,7 @@ import xml.dom.minidom
 from pyxform.xls2xform import xls2xform_convert
 
 from hashlib import md5
-from datetime import datetime
+from django.utils.timezone import now
 
 from django.db.models.signals import post_save
 from django.db import models
@@ -226,19 +226,6 @@ class XForm(models.Model):
 
 #############################################################
 
-def submission_path(instance, filename):
-    """
-    Define where to save posted xforms
-    """
-    path = os.path.join(
-        instance.class_name,
-        instance.subfolder1,
-        instance.subfolder2,
-        os.path.split(filename)[1]
-    )
-    return path
-
-
 def get_survey_date(xml_content):
     matches = re.findall(r'<today>([^<]+)</today>', xml_content)
     if matches:
@@ -262,6 +249,8 @@ def get_instanceid(xml_content):
 class XFormSubmit(models.Model):
     """
     Submitted files from ODK Collect
+    xformsubmit pictures location is xml_file location as directory
+    used in odkdata.load_submit_data and odk.utils.ManageFile.save_pictures
     """
     # xform = models.ForeignKey(
     #     XForm,
@@ -307,6 +296,7 @@ class XFormSubmit(models.Model):
         blank=True, null=True
     )
     submitted_on = models.DateTimeField(
+        auto_now_add=True,
         verbose_name=_("Submitted on")
     )
     inserted_on = models.DateTimeField(
@@ -316,22 +306,12 @@ class XFormSubmit(models.Model):
 
     class Meta:
         verbose_name = _("Submitted form")
-        # unique_together = ('form_id', 'version', 'instanceid')
+        verbose_name_plural = _("Submitted forms")
         ordering = ('submitted_on',)
 
     @property
     def class_name(self):
         return self.__class__.__name__
-
-    @property
-    def subfolder1(self):
-        """folder name: form_id-version"""
-        return f"{self.form_id}-{self.version}"
-
-    @property
-    def subfolder2(self):
-        """survey date in format YYYY-MM-DD"""
-        return self.survey_date.strftime('%Y-%m-%d')
 
     def _set_xml_content(self):
         with open(self.xml_file.path, 'r') as f:
@@ -350,7 +330,7 @@ class XFormSubmit(models.Model):
     def _set_survey_date(self):
         self.survey_date = get_survey_date(self.xml_content)
         if self.survey_date is None:
-            self.survey_date = datetime.now().strftime("%Y-%m-%d")
+            self.survey_date = now().strftime("%Y-%m-%d")
 
     def _set_username(self):
         matches = re.findall(r'<username>([^<]+)</username>', self.xml_content)
@@ -374,16 +354,6 @@ class XFormSubmit(models.Model):
         self.instanceid = get_instanceid(self.xml_content)
 
     def rm_xmlext_from_url(self):
-        """
-        Get pictures in the appropriate folder, ie:
-        pic_path = os.path.join(
-                        "XFormSubmit",
-                        subfolder1 (form_id-version),
-                        subfolder2 (date as yyyy-mm-dd),
-                        xml_filename,
-                        pic_pointer.name
-                    )
-        """
         url_path = self.xml_file.url.replace('.xml', '/')
         return url_path
 

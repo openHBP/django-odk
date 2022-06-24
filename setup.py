@@ -38,7 +38,7 @@ setup(
     author='Patrick HOUBEN',
     author_email='p.houben@cra.wallonie.be',
     license='GPL-3.0-or-later',
-    packages=['odk', 'odk.openrosa', 'odk.locale', 'odk.migrations', 'odk.templates', 'odk.templatetags',
+    packages=['odk', 'odk.openrosa', 'odk.locale', 'odk.locale.fr.LC_MESSAGES', 'odk.migrations', 'odk.templates', 'odk.templates.odk', 'odk.templatetags',
         'odkdata', 'odkdata.models', 'odkdata.migrations',
         'doc', 'xform_sample'],
     package_dir={"":"django_odk"},

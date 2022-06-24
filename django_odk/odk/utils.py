@@ -4,7 +4,7 @@ import os
 import re
 import logging
 
-from datetime import datetime
+from django.utils.timezone import now
 # Django
 from django.utils.translation import gettext as _
 
@@ -97,20 +97,12 @@ class ManageFile(object):
             LOG.error = msg
         else:
             msg = 'OK'
-        # print(f"form_id: {self.form_id}")
-        # print(f"version: {self.version}")
         return msg
 
-    @property
-    def subfolder1(self):
-        return f"{self.form_id}-{self.version}"
 
     @property
-    def subfolder2(self):
-        survey_date = get_survey_date(self.xml_content)
-        if survey_date is None:
-            survey_date = datetime.now().strftime("%Y-%m-%d")
-        return survey_date
+    def submitted_on(self):
+        return now().strftime("%Y-%m-%d")
 
 
     def get_xform_pk(self, class_name='XForm'):
@@ -136,7 +128,7 @@ class ManageFile(object):
         try:
             file_pointer = self.request.FILES[file_key]
             if class_name == "XFormSubmit":
-                self.xml_file = os.path.join(class_name, self.subfolder1, self.subfolder2, file_pointer.name)
+                self.xml_file = os.path.join(class_name, self.form_id, self.submitted_on, file_pointer.name)
             else:
                 self.xml_file = os.path.join(class_name, file_pointer.name)
             
@@ -155,26 +147,21 @@ class ManageFile(object):
         Must be last fucntion call!
         """
         try:
-            # myxml = xml.dom.minidom.parseString(self.xml_content)
-            # xml_pretty_str = myxml.toprettyxml()
             picture_files = get_submitted_picture(self.xml_content, 'pic_img')
-            submitted_on = overwrite_storage.get_created_time(self.xml_file)
+            # submitted_on = overwrite_storage.get_created_time(self.xml_file)
             instanceid = get_instanceid(self.xml_content)
             try:
                 xsub = XFormSubmit.objects.get(instanceid=instanceid)
                 # Update
-                # xsub.xml_content=xml_pretty_str, # done in models.py
+                xsub.xml_content=xml_pretty_str, # done in models.py on create only!
                 xsub.picture_files = picture_files,
-                xsub.submitted_on = submitted_on
+                xsub.submitted_on = self.submitted_on
                 
             except XFormSubmit.DoesNotExist:
                 # Insert
                 xsub = XFormSubmit.objects.create(
-                    # xform=self.xform,
                     xml_file=self.xml_file,
-                    # xml_content=xml_pretty_str, # done in models.py
                     picture_files=picture_files,
-                    submitted_on=submitted_on,
                 )
             
             pathname = self.xml_file
@@ -202,8 +189,8 @@ class ManageFile(object):
                     # LOG_DEBUG.debug(f'pic_pointer: {pic_pointer}')
                     pic_path = os.path.join(
                         "XFormSubmit",
-                        self.subfolder1,
-                        self.subfolder2,
+                        self.form_id,
+                        self.submitted_on,
                         self.xml_filename,
                         pic_pointer.name
                     )
