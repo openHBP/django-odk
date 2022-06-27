@@ -10,7 +10,6 @@
       <thead>
         <tr>
           <th>{% get_verbose_field_name object_list "form_id" %}</th>
-          <th>{% get_verbose_field_name object_list "version" %}</th>
           <th>{% get_verbose_field_name object_list "xml_file" %}</th>
           <th>{% get_verbose_field_name object_list "submitted_on" %}</th>
           <th>{% get_verbose_field_name object_list "inserted_on" %}</th>
@@ -20,7 +19,6 @@
           {% for i in object_list %}
               <tr>
               <td><a href="{{ i.get_absolute_url }}">{{ i.form_id }}</a></td>
-              <td>{{ i.version }}</td>
               <td><a href="{{ i.xml_file.url }}" target="_blank">{{ i.xml_file }}</a></td>
               <td>{{ i.submitted_on }}</td>
               <td>{{ i.inserted_on|date:"Y-m-d H:i:s" }}</td>

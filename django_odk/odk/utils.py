@@ -153,20 +153,21 @@ class ManageFile(object):
             try:
                 xsub = XFormSubmit.objects.get(instanceid=instanceid)
                 # Update
-                xsub.xml_content=xml_pretty_str, # done in models.py on create only!
+                # xsub.xml_content=xml_pretty_str, # done in models.py on create only!
                 xsub.picture_files = picture_files,
                 xsub.submitted_on = self.submitted_on
                 
             except XFormSubmit.DoesNotExist:
                 # Insert
                 xsub = XFormSubmit.objects.create(
+                    instanceid=instanceid,
                     xml_file=self.xml_file,
                     picture_files=picture_files,
                 )
             
-            pathname = self.xml_file
-            lastslash = pathname.rfind('/')
-            fname = pathname[lastslash+1:]
+            # pathname = self.xml_file
+            # lastslash = pathname.rfind('/')
+            # fname = pathname[lastslash+1:]
             #msg = f'fichier {fname} submitted!'
             msg = _("Well sent! Thanks!")
         except Exception as xcpt:

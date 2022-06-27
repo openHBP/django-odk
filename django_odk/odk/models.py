@@ -377,15 +377,15 @@ def fillin_xml_fields(instance, created, **kwargs):
     done in post_save signal with created flag in order to allow modification in Db via Django Admin
     """    
     if created:
-        # try:
-        instance._set_xml_content()
-        instance._set_form_id()
-        instance._set_version()
-        instance._set_survey_date()
-        instance._set_username()
-        instance._set_instanceid()
-        instance.save()
-        # except Exception as xcpt:
-        #     raise Exception(xcpt)
+        try:
+            instance._set_xml_content()
+            instance._set_form_id()
+            instance._set_version()
+            instance._set_survey_date()
+            instance._set_username()
+            instance._set_instanceid()
+            instance.save()
+        except Exception as xcpt:
+            raise Exception(xcpt)
 
 post_save.connect(receiver=fillin_xml_fields, sender=XFormSubmit, weak=False)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-20 15:05+0200\n"
+"POT-Creation-Date: 2022-06-27 12:29+0200\n"
 "PO-Revision-Date: 2021-10-05 17:26+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,128 +18,117 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 3.0\n"
 
-#: odk/admin.py:19
+#: odk/admin.py:18
 msgid "Convert XLSX to XML"
 msgstr "Convertir XLSX en XML"
 
-#: odk/admin.py:30
+#: odk/admin.py:29
 msgid "Create Model in odkdata"
 msgstr "Créer le modèle dans odkdata"
 
-#: odk/admin.py:38
+#: odk/admin.py:37
 msgid "Please select 1 record at a time."
 msgstr "Veuillez sélectionner 1 enregistrement à la fois."
 
-#: odk/admin.py:47
+#: odk/admin.py:46
 msgid "Error while creating model."
 msgstr "Erreur lors de la création du modèle."
 
-#: odk/admin.py:72
-msgid "Record loaded with success!"
-msgstr "Enregistrement chargé avec succès!"
-
-#: odk/admin.py:82
-msgid "table does not exist in the database"
-msgstr "n'existe pas dans la base de données"
-
 #: odk/admin.py:84
-msgid ""
-"Did you run 'manage.py makemigrations odkdata' then 'manage.py migrate'?"
-msgstr ""
-"Avez-vous exécuté 'manage.py makemigrations odkdata' puis 'manage.py "
-"migrate'?"
-
-#: odk/admin.py:92
 msgid "Insert in odkdata model"
 msgstr "Insérer dans odkdata model"
 
-#: odk/models.py:80
+#: odk/models.py:81
 msgid "Excel file"
 msgstr "Fichier Excel"
 
-#: odk/models.py:83
+#: odk/models.py:84
 msgid "XLSForm with 3 tabs: survey, choices, settings"
 msgstr "XLSForm avec 3 onglets: survey, choices, settings"
 
-#: odk/models.py:86
+#: odk/models.py:87
 msgid "XML file"
 msgstr "Fichier XML"
 
-#: odk/models.py:89
+#: odk/models.py:90
 msgid "converted by"
 msgstr "converti par"
 
-#: odk/models.py:92
+#: odk/models.py:93
 msgid "Content of XML form"
 msgstr "Contenu du formulaire XML"
 
-#: odk/models.py:97 odk/models.py:102 odk/models.py:107
+#: odk/models.py:99 odk/models.py:104 odk/models.py:109
 msgid "Retrieved from XLSForm (xls settings tab)"
 msgstr "Extrait depuis XLSForm (onglet settings)"
 
-#: odk/models.py:105
+#: odk/models.py:107
 msgid "Title"
 msgstr "Titre"
 
-#: odk/models.py:111
+#: odk/models.py:113
 msgid "Short description"
 msgstr "Brève description"
 
-#: odk/models.py:117
+#: odk/models.py:119
 msgid "Created by"
 msgstr "Créé par"
 
-#: odk/models.py:121
+#: odk/models.py:124
 msgid "Created on"
 msgstr "Créé le"
 
-#: odk/models.py:124
+#: odk/models.py:127
 msgid "Model created on"
 msgstr "Modèle créé le"
 
-#: odk/models.py:129 odk/templates/home.html:9
+#: odk/models.py:132 odk/templates/home.html:9
 msgid "Available form"
 msgstr "Formulaire disponible"
 
-#: odk/models.py:272 odk/models.py:277
+#: odk/models.py:264 odk/models.py:269
 msgid "Retrieved from XML form (settings tab of Excel file)"
 msgstr "Extrait du formulaire XML (onglet settings du fichier Excel)"
 
-#: odk/models.py:285
+#: odk/models.py:277
 msgid "Encoding date"
 msgstr "Date d'encodage"
 
-#: odk/models.py:289
+#: odk/models.py:281
 msgid "Picture file names"
 msgstr "Noms des fichiers d'image"
 
-#: odk/models.py:293 odk/models.py:315 odk/templates/home.html:11
+#: odk/models.py:285 odk/models.py:308 odk/templates/home.html:11
 msgid "Submitted form"
 msgstr "Formulaire soumis"
 
-#: odk/models.py:294
+#: odk/models.py:286
 msgid "XML file sended through ODK Collect Mobile App"
 msgstr "Fichier XML envoyé via ODK Collect (Application Mobile)"
 
-#: odk/models.py:298
+#: odk/models.py:290
 msgid "Content of XML file submitted"
 msgstr "Contenu du fichier XML soumis"
 
-#: odk/models.py:299
+#: odk/models.py:291
 msgid "XML content sended through ODK Collect Mobile App"
 msgstr "Contenu XML envoyé via ODK Collect (Application Mobile)"
 
-#: odk/models.py:303
+#: odk/models.py:295
 msgid "Submitted by"
 msgstr "Soumis par"
 
-#: odk/models.py:307
+#: odk/models.py:300
 msgid "Submitted on"
 msgstr "Soumis le"
 
-#: odk/models.py:310
+#: odk/models.py:303
 msgid "Inserted on"
 msgstr "Inséré le"
+
+#: odk/models.py:309
+msgid "Submitted forms"
+msgstr "Formulaire soumis"
 
 #: odk/templates/odk/_xformsubmit_detail_main.html:26
 msgid "Picture"
@@ -175,12 +164,11 @@ msgstr "Supprimer"
 msgid "Wait until the page is refreshed"
 msgstr "Attendre jusqu'à ce que la page soit rafraîchie"
 
-#: odk/templates/odk/xform_detail.html:63 odk/templates/odk/xform_list.html:48
+#: odk/templates/odk/xform_detail.html:61 odk/templates/odk/xform_list.html:48
 #: odk/templates/odk/xform_upload.html:25
 #: odk/templates/odk/xform_upload.html:27
 #: odk/templates/odk/xformsubmit_detail.html:43
-#: odk/templates/odk/xformsubmit_list copy.html:59
-#: odk/templates/odk/xformsubmit_list.html:59 odk/templates/xform_doc.html:21
+#: odk/templates/odk/xformsubmit_list.html:47 odk/templates/xform_doc.html:21
 msgid "Back"
 msgstr "Retour"
 
@@ -192,8 +180,8 @@ msgstr "Ajouter"
 msgid "Login to add a form"
 msgstr "Se connecter pour ajouter un formulaire"
 
-#: odk/templates/odk/xform_list.html:13 odk/templates/odk/xformsubmit_list
-#: copy.html:55 odk/templates/odk/xformsubmit_list.html:55
+#: odk/templates/odk/xform_list.html:13
+#: odk/templates/odk/xformsubmit_list.html:43
 msgid "Login"
 msgstr "Connexion"
 
@@ -222,35 +210,18 @@ msgid ""
 "If you want to reload data, set 'inserted on' to null from admin interface "
 "or DB and 'Insert' again =>Update"
 msgstr ""
-"Pour recharger les données, mettre le champ 'inserted_on' a null via admin ou DB puis 'Insert' => Update"
+"Pour recharger les données, mettre le champ 'inserted_on' a null via admin "
+"ou DB puis 'Insert' => Update"
 
-#: odk/templates/odk/xformsubmit_list copy.html:10
-#: odk/templates/odk/xformsubmit_list.html:10
-msgid "Submitted forms not present in the database!"
-msgstr "Formulaire soumis absent de la base de données!"
-
-#: odk/templates/odk/xformsubmit_list copy.html:16
-#: odk/templates/odk/xformsubmit_list.html:16
-msgid "Click on load forms to load them in the database"
-msgstr ""
-"Cliquez sur charger le formulaire pour le charger dans la base de données"
-
-#: odk/templates/odk/xformsubmit_list copy.html:18
-#: odk/templates/odk/xformsubmit_list.html:18
-msgid "Load forms"
-msgstr "Charger le formulaire"
-
-#: odk/templates/odk/xformsubmit_list copy.html:45
-#: odk/templates/odk/xformsubmit_list.html:47
+#: odk/templates/odk/xformsubmit_list.html:31
 msgid "No submitted forms yet."
 msgstr "Aucun formulaire n'a encore été soumis."
 
-#: odk/templates/odk/xformsubmit_list copy.html:49
+#: odk/templates/odk/xformsubmit_list.html:35
 msgid "You must be granted access to view submitted forms."
 msgstr "Vous devez disposer d'un accès pour visualiser les formulaires soumis."
 
-#: odk/templates/odk/xformsubmit_list copy.html:53
-#: odk/templates/odk/xformsubmit_list.html:53
+#: odk/templates/odk/xformsubmit_list.html:41
 msgid "Login to view submitted forms"
 msgstr "Connectez-vous pour voir les formulaires soumis"
 
@@ -300,7 +271,7 @@ msgstr "Fichier non trouvé"
 msgid "Key elements (form_id - version) not found"
 msgstr "Éléments clés (form_od - version) non trouvés"
 
-#: odk/utils.py:184
+#: odk/utils.py:172
 msgid "Well sent! Thanks!"
 msgstr "Bien envoyé! Merci!"
 
@@ -339,6 +310,7 @@ msgstr "Creation & chargement de fichiers XForm"
 msgid "Delete this form?"
 msgstr "Supprimer ce formulaire?"
 
-#: odk/views.py:190
+#: odk/views.py:201
 msgid "Delete this submitted form?"
 msgstr "Supprimer ce formulaire soumis?"
+
