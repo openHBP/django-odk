@@ -82,3 +82,9 @@ Changes
 * Change gettext into gettext_lazy in odk.models
 * Add functions in odkdata.create_model
 * Adapt messages for Submitted forms query set (odk.admin.py)
+
+1.1.4 (2022-06-27)
+------------------
+* Issues with PyPi new version not visisble
+* load_submit_data Issues
+* create_model Issues

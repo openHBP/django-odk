@@ -94,23 +94,23 @@ def model_correction(pkg_path, form_id):
                     f_new.write(f"{sp4}xfs = models.OneToOneField(XFormSubmit, on_delete=models.CASCADE, primary_key=True)\n")
                     f_new.write(f"{sp4}instanceid = models.UUIDField(unique=True)\n")
                 if f'verbose_name_plural = "{new_name.lower()}s"' in line:
-                    f_new.write(f"{sp4}{sp4}null=True, blank=True,\n")
+                    f_new.write("\n")
 
-                    f_new.write('    def get_formid_version(self):')
+                    f_new.write('    def get_formid_version(self):\n')
                     f_new.write('        return f"{self.xfs.form_id}v{self.xfs.version}"')
-                    f_new.write('\n')
+                    f_new.write('\n\n')
 
-                    f_new.write('    def get_submit_date(self):')
+                    f_new.write('    def get_submit_date(self):\n')
                     f_new.write('''        return f"{self.xfs.submitted_on.strftime('%Y-%m-%d %H:%M:%S')}"''')
-                    f_new.write('\n')
+                    f_new.write('\n\n')
 
-                    f_new.write('    def get_title(self):')
-                    f_new.write('''        return f"{self.xfs.form_id}v{self.xfs.version} date: {self.today.strftime('%Y-%m-%d')}"''')
-                    f_new.write('\n')
+                    f_new.write('    def get_title(self):\n')
+                    f_new.write('''        return f"{self.xfs.form_id} date: {self.today.strftime('%Y-%m-%d')}"''')
+                    f_new.write('\n\n')
 
-                    f_new.write('    def __str__(self):')
-                    f_new.write('''        return f"{self.xfs.form_id}v{self.xfs.version} @ {self.xfs.submitted_on.strftime('%Y-%m-%d %H:%M:%S')}"''')
-                    f_new.write('\n')
+                    f_new.write('    def __str__(self):\n')
+                    f_new.write('''        return f"{self.xfs.form_id} @ {self.xfs.submitted_on.strftime('%Y-%m-%d %H:%M:%S')}"''')
+                    f_new.write('\n\n')
 
     except (IOError, OSError) as e:
         LOG.error(e)

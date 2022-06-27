@@ -134,7 +134,8 @@ def load_record(xfs):
                 try:
                     value = values_list[n]
                 except IndexError:
-                    error_msg = f"id [{xfs.id}] - IndexError between {fields} and {values_list} - check and correct xml_content or xlsx form (required fields)"
+                    fields_name = [i.name for i in fields]
+                    error_msg = f"id [{xfs.id}] - IndexError between {fields_name} and {values_list} - check and correct xml_content or xlsx form (required fields)"
                     return 0, error_msg
 
                 # Particular case for ImageField
