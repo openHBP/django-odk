@@ -9,9 +9,9 @@ Release logic:
  6. git tag {new version}
  7. git push --tags
  8. python setup.py sdist bdist_wheel
- 9. twine upload dist/django-filer-{new version}.tar.gz
+ 9. twine upload dist/*{new version}*
 """
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 __author__ = 'Patrick HOUBEN'
 __credits__ = 'Walloon Agricultural Research Centre'

@@ -72,7 +72,7 @@ Changes
 ------------------
 * Add 'doc' and 'xform_sample' folder
 
-1.1.0 (2022-06-27)
+1.1.1 (2022-06-27)
 ------------------
 * ReadMe corrections
 * Add xfs OneToOneField field between final model and odk.XFormSubmit
@@ -83,3 +83,7 @@ Changes
 * Add functions in odkdata.create_model
 * Adapt messages for Submitted forms query set (odk.admin.py)
 * Rm submission_path from odk.models
+
+1.1.2 (2022-06-27)
+------------------
+* Keep migration history
