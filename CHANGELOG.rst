@@ -82,8 +82,3 @@ Changes
 * Change gettext into gettext_lazy in odk.models
 * Add functions in odkdata.create_model
 * Adapt messages for Submitted forms query set (odk.admin.py)
-* Rm submission_path from odk.models
-
-1.1.2 (2022-06-27)
-------------------
-* Keep migration history
