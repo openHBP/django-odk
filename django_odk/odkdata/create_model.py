@@ -94,6 +94,7 @@ def model_correction(pkg_path, form_id):
                     f_new.write(f"{sp4}xfs = models.OneToOneField(XFormSubmit, on_delete=models.CASCADE, primary_key=True)\n")
                     f_new.write(f"{sp4}instanceid = models.UUIDField(unique=True)\n")
                 if f'verbose_name_plural = "{new_name.lower()}s"' in line:
+                    f_new.write(f'{sp4}{sp4}ordering = ["-xfs__submitted_on"]\n')
                     f_new.write("\n")
 
                     f_new.write('    def get_formid_version(self):\n')

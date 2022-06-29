@@ -105,7 +105,7 @@ Connect to django-odk => **Available form** => Add and follow 4 steps:
 
 2. **Upload** xlsx file (XForm) by clicking on 'Choose file' and Save
 
-3. **Convert** xlsx file to xml XForm compatible file [Thanks pyxform!](https://github.com/XLSForm/pyxform)
+3. **Convert** xlsx file to xml XForm compatible file [Thanks pyxform!](https://github.com/XLSForm/pyxform). If it is not working in production (504 Geteway timeout), xml (previously created from [XLSForm Online](https://getodk.org/xlsform/)) can be uploaded manually from admin site.
 
 From this point, you are ready to go with form encoding on your smartphone!
 
@@ -122,6 +122,8 @@ Several record insert is available through admin interface. Select appropriate r
 
 # What next?
 Create a new app in you project like `odkdata2` with `templates, views` (importing odkdata.models info) and `urls` to manage display/map/export-xls/update/analyse submitted data from ODK-Collect!
+
+* Do not forget to add `odkdata2` logger specifications in settings.py
 
 Comments/Improvements welcome!
 

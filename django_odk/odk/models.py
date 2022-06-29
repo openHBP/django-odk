@@ -30,6 +30,10 @@ LOG = logging.getLogger(__name__)
 LOG_DEBUG = logging.getLogger('mydebug')
 
 
+#############################################################
+# XForm
+#############################################################
+
 def xform_path(instance, filename):
     """
     Define where to save posted xforms
@@ -46,9 +50,9 @@ def get_form_id(xml_content):
     Search id attr in data tag
     """
     my_regexp = re.compile(r'<data.*id="([^"]+)"', re.DOTALL)
-    matches = my_regexp.findall(xml_content)
-    if matches:
-        return matches[0]
+    match = my_regexp.findall(xml_content)
+    if match:
+        return match[0]
     else:
         LOG.error(f"Unable to find 'id attr' of <data> tag in xml file")
         return 'ERROR'
@@ -59,9 +63,9 @@ def get_version(xml_content):
     Search version attr in data tag in XML and set it in table
     """
     my_regexp = re.compile(r'<data.*version="([^"]+)"', re.DOTALL)
-    matches = my_regexp.findall(xml_content)
-    if matches:
-        return matches[0]
+    match = my_regexp.findall(xml_content)
+    if match:
+        return match[0]
     else:
         # Version might not be present in settings tab or tab is missing!
         return get_form_id(xml_content)
@@ -160,9 +164,9 @@ class XForm(models.Model):
         match = my_regexp.findall(self.xml_content)
         if match:
             self.form_id = match[0]
-            return True
         else:
-            return False
+            raise Exception(f"There MUST be a <instance> tag with 'form_id' in xml file {self.xml_file.path}")
+        return
 
     def _set_version(self):
         """
@@ -170,11 +174,8 @@ class XForm(models.Model):
         """
         my_regexp = re.compile(r'<instance>.*?version="([^"]+)".*</instance>',
                                re.DOTALL)
-        matches = my_regexp.findall(self.xml_content)
-        if matches:
-            self.version = matches[0]
-        else:
-            self.version = self.form_id
+        match = my_regexp.findall(self.xml_content)
+        self.version = self.form_id if not match else match[0]
         return
 
     def _set_title(self):
@@ -185,10 +186,15 @@ class XForm(models.Model):
         $ => end
         """
         text = re.sub(r'\s+', ' ', self.xml_content)
-        matches = re.findall(r'<h:title>([^<]+)</h:title>', text)
-        if len(matches) != 1:
-            raise Exception('There should be a single title.', matches)
-        self.title = '' if not matches else matches[0]
+        match = re.findall(r'<h:title>([^<]+)</h:title>', text)
+        self.title = '' if not match else match[0]
+        return
+
+    def set_xml_fields(self):
+        self._set_xml_content()
+        self._set_form_id()
+        self._set_version()
+        self._set_title()
         return
 
     def process_xform(self):
@@ -200,10 +206,7 @@ class XForm(models.Model):
             raise Exception(response)
         else:
             self.xml_file = self.xls_file.name.replace(".xlsx", ".xml")
-            self._set_xml_content()
-            self._set_form_id()
-            self._set_version()
-            self._set_title()
+            # set_xml_fields done in post_save signal
         return
 
     def get_absolute_url(self):
@@ -224,12 +227,33 @@ class XForm(models.Model):
         return u'md5:%s' % md5(self.xml_content.encode('utf8')).hexdigest()
 
 
+#################
+# SIGNAL XForm
+#################
+
+def set_xmlform_fields_signal(instance, created, **kwargs):
+    """
+    based on xml file uploaded, set_xml_fields: xml_content, form_id, version, title
+    done in post_save signal with created flag in order to allow modification in DB via Django Admin
+    """    
+    if created:
+        try:
+            instance.set_xml_fields()
+            instance.save()
+        except Exception as xcpt:
+            raise Exception(xcpt)
+
+post_save.connect(receiver=set_xmlform_fields_signal, sender=XForm, weak=False)
+
+
+#############################################################
+# XFormSubmit
 #############################################################
 
 def get_survey_date(xml_content):
-    matches = re.findall(r'<today>([^<]+)</today>', xml_content)
-    if matches:
-        return matches[0]
+    match = re.findall(r'<today>([^<]+)</today>', xml_content)
+    if match:
+        return match[0]
     else:
         return None
 
@@ -238,9 +262,9 @@ def get_instanceid(xml_content):
     """
     unique identifier per survey
     """
-    matches = re.findall(r'<instanceID>uuid:([^<]+)</instanceID>', xml_content)
-    if matches:
-        return matches[0]
+    match = re.findall(r'<instanceID>uuid:([^<]+)</instanceID>', xml_content)
+    if match:
+        return match[0]
     else:
         LOG.error("Unable to find '<instanceID>uuid:' pattern in xml file")
         return None
@@ -333,18 +357,18 @@ class XFormSubmit(models.Model):
             self.survey_date = now().strftime("%Y-%m-%d")
 
     def _set_username(self):
-        matches = re.findall(r'<username>([^<]+)</username>', self.xml_content)
-        if matches:
-            self.submitted_by = matches[0]
+        match = re.findall(r'<username>([^<]+)</username>', self.xml_content)
+        if match:
+            self.submitted_by = match[0]
             return
         else:
             LOG.warning("Unable to find '<username>' pattern in xml file")
             return
 
     def _set_deviceid(self):
-        matches = re.findall(r'<deviceid>([^<]+)</deviceid>', self.xml_content)
-        if matches:
-            self.deviceid = matches[0]
+        match = re.findall(r'<deviceid>([^<]+)</deviceid>', self.xml_content)
+        if match:
+            self.deviceid = match[0]
             return
         else:
             LOG.warning("Unable to find '<deviceid>' pattern in xml file")
@@ -368,10 +392,10 @@ class XFormSubmit(models.Model):
 
 
 #################
-# SIGNALS
+# SIGNAL XFormSubmit
 #################
 
-def fillin_xml_fields(instance, created, **kwargs):
+def set_xmlsubmit_fields_signal(instance, created, **kwargs):
     """
     based on xml file uploaded, fillin form_id, version, xml_content, username and instanceid
     done in post_save signal with created flag in order to allow modification in Db via Django Admin
@@ -388,4 +412,4 @@ def fillin_xml_fields(instance, created, **kwargs):
         except Exception as xcpt:
             raise Exception(xcpt)
 
-post_save.connect(receiver=fillin_xml_fields, sender=XFormSubmit, weak=False)
+post_save.connect(receiver=set_xmlsubmit_fields_signal, sender=XFormSubmit, weak=False)

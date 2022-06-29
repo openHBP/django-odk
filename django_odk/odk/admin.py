@@ -26,6 +26,13 @@ def xform_convert(modeladmin, request, queryset):
         record.save()
 
 
+@admin.action(description=_('Set xml_content, form_id, version, title'))
+def set_xml_fields(modeladmin, request, queryset):
+    for record in queryset:
+        record.set_xml_fields()
+        record.save()
+
+
 @admin.action(description=_('Create Model in odkdata'))
 def xform_createmodel(modeladmin, request, queryset):
     """
@@ -47,11 +54,11 @@ def xform_createmodel(modeladmin, request, queryset):
 
 
 class XFormAdmin(admin.ModelAdmin):
-    list_display = ('id', 'xls_file', 'form_id', 'version', 'xml_file')
+    list_display = ('id', 'xls_file', 'xml_file', 'form_id', 'version')
     list_filter = ('xls_file',)
     search_fields = ('xls_file', 'xml_content', 'short_desc', 'title',)
     # fields = ['xls_file', 'xml_content', 'short_desc', 'model_created']
-    actions = [xform_convert, xform_createmodel]
+    actions = [set_xml_fields, xform_convert, xform_createmodel]
 
     def save_model(self, request, obj, form, change):
         obj.created_by = request.user
@@ -114,7 +121,7 @@ def xformsubmit_load_data(modeladmin, request, queryset):
 class XFormSubmitAdmin(admin.ModelAdmin):
     list_display = ('id', 'form_id', 'version', 'xml_file', 'inserted_on', 'picture_files')
     list_filter = ('form_id', 'survey_date')
-    search_fields = ('xml_file', 'xml_content', 'title',)
+    search_fields = ('xml_file', 'xml_content', 'id',)
     # fields = ['xml_file', 'picture_files']
     actions = [xformsubmit_load_data]
 

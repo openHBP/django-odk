@@ -83,8 +83,10 @@ Changes
 * Add functions in odkdata.create_model
 * Adapt messages for Submitted forms query set (odk.admin.py)
 
-1.1.4 (2022-06-27)
+1.1.4 (2022-06-29)
 ------------------
 * Issues with PyPi new version not visisble
 * load_submit_data Issues
-* create_model Issues
+* Add blank line in create_model methods
+* Add post-save signal @ XForm creation to set all xml_fields: xml_content, form_id, version & title
+* Adapt _set methods of XForm

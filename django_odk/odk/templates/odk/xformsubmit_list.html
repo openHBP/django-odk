@@ -9,6 +9,7 @@
       <table id="object_list" class="table table-bordered table-striped">
       <thead>
         <tr>
+          <th>#</th>
           <th>{% get_verbose_field_name object_list "form_id" %}</th>
           <th>{% get_verbose_field_name object_list "xml_file" %}</th>
           <th>{% get_verbose_field_name object_list "submitted_on" %}</th>
@@ -18,7 +19,8 @@
       <tbody>
           {% for i in object_list %}
               <tr>
-              <td><a href="{{ i.get_absolute_url }}">{{ i.form_id }}</a></td>
+              <td><a href="{{ i.get_absolute_url }}">{{ i.id }}</a></td>
+              <td>{{ i.form_id }}</td>
               <td><a href="{{ i.xml_file.url }}" target="_blank">{{ i.xml_file }}</a></td>
               <td>{{ i.submitted_on }}</td>
               <td>{{ i.inserted_on|date:"Y-m-d H:i:s" }}</td>
