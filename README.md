@@ -105,7 +105,7 @@ Connect to django-odk => **Available form** => Add and follow 4 steps:
 
 2. **Upload** xlsx file (XForm) by clicking on 'Choose file' and Save
 
-3. **Convert** xlsx file to xml XForm compatible file [Thanks pyxform!](https://github.com/XLSForm/pyxform). If it is not working in production (504 Geteway timeout), xml (previously created from [XLSForm Online](https://getodk.org/xlsform/)) can be uploaded manually from admin site.
+3. **Convert** xlsx file to xml XForm compatible file [Thanks pyxform!](https://github.com/XLSForm/pyxform) If it is not working in production (504 Geteway timeout), xml (previously created from [XLSForm Online](https://getodk.org/xlsform/)) can be uploaded manually from admin site.
 
 From this point, you are ready to go with form encoding on your smartphone!
 

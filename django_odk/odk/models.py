@@ -135,7 +135,7 @@ class XForm(models.Model):
     class Meta:
         verbose_name = _("Available form")
         unique_together = ('form_id', 'version')
-        ordering = ('xml_file',)
+        ordering = ("-created_on",)
 
     @property
     def class_name(self):
@@ -331,7 +331,7 @@ class XFormSubmit(models.Model):
     class Meta:
         verbose_name = _("Submitted form")
         verbose_name_plural = _("Submitted forms")
-        ordering = ('submitted_on',)
+        ordering = ('-submitted_on',)
 
     @property
     def class_name(self):

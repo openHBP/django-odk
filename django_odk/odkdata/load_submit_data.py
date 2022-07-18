@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from django.apps import apps
 from django.db import connection
+from django.db.utils import DatabaseError
 from django.contrib.gis.geos.point import Point
 from django.db.models import ManyToOneRel, IntegerField, ImageField
 from django.contrib.gis.db.models import PointField
@@ -98,7 +99,13 @@ def load_record(xfs):
     fdict, mdict = fetch_xml_data(xfs, model)
 
     # Upsert data in main model
-    model_inst, created = model.objects.get_or_create(instanceid=xfs.instanceid, defaults=fdict)
+    try:
+        model_inst, created = model.objects.get_or_create(instanceid=xfs.instanceid, defaults=fdict)
+    except DatabaseError as xcpt:
+        LOG.error(xcpt)
+        return 0, xcpt
+
+    # If exist => update  
     try:
         if not created:
             for attr, value in fdict.items(): 

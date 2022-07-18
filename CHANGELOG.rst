@@ -90,3 +90,9 @@ Changes
 * Add blank line in create_model methods
 * Add post-save signal @ XForm creation to set all xml_fields: xml_content, form_id, version & title
 * Adapt _set methods of XForm
+
+1.1.5 (2022-07-18)
+------------------
+* date format in template
+* model ordering
+* add DB error catch in load_submi_data
