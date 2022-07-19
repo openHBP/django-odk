@@ -95,4 +95,9 @@ Changes
 ------------------
 * date format in template
 * model ordering
-* add DB error catch in load_submi_data
+* add DB error catch in load_submit_data
+
+1.1.6 (2022-07-19)
+------------------
+* rm signal on xform to allow upload xls and convert xls to xml
+* redirect page after xls2xml done

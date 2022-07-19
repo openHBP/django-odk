@@ -242,8 +242,8 @@ def set_xmlform_fields_signal(instance, created, **kwargs):
             instance.save()
         except Exception as xcpt:
             raise Exception(xcpt)
-
-post_save.connect(receiver=set_xmlform_fields_signal, sender=XForm, weak=False)
+# rm post save in order to allow xls to xml conversion
+# post_save.connect(receiver=set_xmlform_fields_signal, sender=XForm, weak=False)
 
 
 #############################################################

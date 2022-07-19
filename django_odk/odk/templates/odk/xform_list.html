@@ -19,8 +19,12 @@
 <thead>
   <tr>
     <th>#</th>
+    {% if i.xls_file %}
     <th>{% get_verbose_field_name object_list "xls_file" %}</th>
+    {% endif %}
+    {% if i.xml_file %}
     <th>{% get_verbose_field_name object_list "xml_file" %}</th>
+    {% endif %}
     <th>{% get_verbose_field_name object_list "title" %}</th>
     <th>{% get_verbose_field_name object_list "form_id" %}</th>
     <th>{% get_verbose_field_name object_list "version" %}</th>
@@ -31,8 +35,12 @@
     {% for i in object_list %}
         <tr>
           <td><a href="{{ i.get_absolute_url }}">{{ i.id }}</a></td>
+          {% if i.xls_file %}
           <td><a href="{{ i.xls_file.url }}" target="_blank">{{ i.xls_file }}</a></td>
+          {% endif %}
+          {% if i.xml_file %}
           <td><a href="{{ i.xml_file.url }}" target="_blank">{{ i.xml_file }}</a></td>
+          {% endif %}
           <td>{{ i.title }}</td>
           <td>{{ i.form_id }}</td>
           <td>{{ i.version }}</td>

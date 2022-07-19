@@ -69,7 +69,10 @@ class XFormDetailView(OdkGenView, generic.DetailView):
         if 'xls2xml' in request.path:
             obj.process_xform()
             obj.save()
+            obj.set_xml_fields()
+            obj.save()
             messages.success(request, _("XLSX successfully converted to XML XForm format."))
+            return redirect(obj.get_absolute_url())
         if 'createmodel' in request.path:
             if create_model.process(obj):
                 model_name = create_model.rm_digit(obj.form_id).capitalize()
