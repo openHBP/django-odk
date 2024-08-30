@@ -102,6 +102,6 @@ Changes
 * rm signal on xform to allow upload xls and convert xls to xml
 * redirect page after xls2xml done
 
-1.1.7 (2023-08-30)
+1.1.9 (2023-08-30)
 ------------------
 * install psycopg2-binary instead of psycopg2
