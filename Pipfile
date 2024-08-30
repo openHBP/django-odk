@@ -9,7 +9,7 @@ pyxform = "*"
 xlsconv = "*"
 django-bootstrap5 = "*"
 django-braces = "*"
-psycopg2 = "*"
+psycopg2-binary = "*"
 pillow = "*"
 lxml = "*"
 django-odk = {editable = true, path = "."}
