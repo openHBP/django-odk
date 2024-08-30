@@ -8,12 +8,12 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 REQUIREMENTS = [
-    'django>=2.2,<4.0',
-    'django-braces>=1.11,<2.0',
-    'pyxform>=1.10.0,<2.0',
-    'xlsconv>=1.3.0,<2.0',
-    'pillow>=9.1.1,<9.9',
-    'lxml>=4.9.0,<9.0.0',
+    'django>=3.2,<10.0',
+    'django-braces>=1.11,<11.0',
+    'pyxform>=1.10.0,<11.0',
+    'xlsconv>=1.3.0,<11.0',
+    'pillow>=9.1.1,<20.0',
+    'lxml>=4.9.0,<20.0',
 ]
 
 CLASSIFIERS = [
