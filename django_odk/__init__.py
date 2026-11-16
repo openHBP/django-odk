@@ -1,17 +1,12 @@
 """
-See PEP 386 (https://www.python.org/dev/peps/pep-0386/)
-Release logic:
- 1. Increase version number (change __version__ below).
+Release logic (version lives in pyproject.toml):
+ 1. uv version --bump patch   (or minor / major)
  2. Check that all changes have been documented in CHANGELOG.rst.
- 3. git add filer/__init__.py CHANGELOG.rst
- 4. git commit -m 'Bump to {new version}'
- 5. git push
- 6. git tag {new version}
- 7. git push --tags
- 8. python setup.py sdist bdist_wheel
- 9. twine upload dist/*{new version}*
+ 3. git commit -am "Bump to $(uv version --short)"
+ 4. git tag v$(uv version --short) && git push && git push --tags
+ 5. rm -rf dist && uv build
+ 6. uv publish   (uses UV_PUBLISH_TOKEN, a PyPI API token)
 """
 
-__version__ = "1.2.0"
 __author__ = 'Patrick HOUBEN'
 __credits__ = 'Walloon Agricultural Research Centre'

@@ -1,0 +1,65 @@
+[project]
+name = "django-odk"
+version = "1.2.0"
+description = "Django Data Collection tool using ODK Collect mobile App"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [{ name = "Patrick HOUBEN", email = "p.houben@cra.wallonie.be" }]
+requires-python = ">=3.10"
+dependencies = [
+    "django>=3.2,<10.0",
+    "django-braces>=1.11,<11.0",
+    "django-bootstrap5",
+    "pyxform>=1.10.0,<11.0",
+    "xlsconv>=1.3.0,<11.0",
+    "pillow>=9.1.1,<20.0",
+    "lxml>=4.9.0,<20.0",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "Framework :: Django",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+[project.urls]
+Homepage = "https://github.com/openHBP/django-odk"
+Changelog = "https://github.com/openHBP/django-odk/blob/main/CHANGELOG.rst"
+
+[dependency-groups]
+dev = [
+    "psycopg2-binary",
+    "pylint-django",
+    "pycodestyle",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+# The importable packages live under django_odk/ and are installed as
+# top-level modules (odk, odkdata, ...), as with the former setup.py.
+[tool.hatch.build.targets.wheel]
+packages = [
+    "django_odk/odk",
+    "django_odk/odkdata",
+    "django_odk/doc",
+    "django_odk/xform_sample",
+]
+# Compiled translations are git-ignored but must ship if present.
+artifacts = ["*.mo"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "django_odk/odk",
+    "django_odk/odkdata",
+    "django_odk/doc",
+    "django_odk/xform_sample",
+    "CHANGELOG.rst",
+]
+artifacts = ["*.mo"]
