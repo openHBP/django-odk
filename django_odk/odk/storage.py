@@ -8,6 +8,7 @@ App storage to avoid multiple file creation on server like:
 import os
 
 from django.core.files.storage import FileSystemStorage
+from django.core.files.utils import validate_file_name
 from config.settings import MEDIA_ROOT
 
 
@@ -17,6 +18,10 @@ class OverwriteMixin(object):
     name.
     """
     def get_available_name(self, name, max_length=None):
+        # Reject '..' / absolute paths BEFORE deleting anything: Django only
+        # validates the name after _save(), i.e. after we would have removed
+        # (and the storage rewritten) an arbitrary file under MEDIA_ROOT.
+        validate_file_name(name, allow_relative_path=True)
         self.delete(name)
         return name
 

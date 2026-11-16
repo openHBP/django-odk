@@ -12,6 +12,7 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.utils.text import get_valid_filename
 # odk modules
 from .storage import overwrite_storage
 from .models import XForm, XFormSubmit, xform_path
@@ -51,7 +52,7 @@ class XFormTemplateView(generic.TemplateView):
         return context
 
 
-class XFormListView(generic.ListView):
+class XFormListView(LoginRequiredMixin, generic.ListView):
     model = XForm
 
     def get_context_data(self, **kwargs):
@@ -60,7 +61,7 @@ class XFormListView(generic.ListView):
         return context    
 
 
-class XFormDetailView(OdkGenView, generic.DetailView):
+class XFormDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
     model = XForm
 
     def get(self, request, *args, **kwargs):
@@ -101,7 +102,7 @@ def xform_upload(request, pk=None):
 
     if request.method == 'POST' and request.FILES.get('xls_file'):
         file_pointer = request.FILES.get('xls_file')
-        file_path = os.path.join("XForm", file_pointer.name)
+        file_path = os.path.join("XForm", get_valid_filename(os.path.basename(file_pointer.name)))
         
         filename = overwrite_storage.save(file_path, file_pointer)
 
@@ -173,7 +174,7 @@ class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
         return super().get(request, *args, **kwargs)   
 
 
-# @login_required(login_url='admin:login')
+@login_required(login_url='admin:login')
 def submittedfile_list(request):
     subpath = overwrite_storage.path("XFormSubmit")
     try:

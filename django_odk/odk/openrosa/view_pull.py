@@ -2,7 +2,7 @@
 import os
 import logging
 
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
@@ -10,6 +10,7 @@ from django.template import loader
 
 from odk.models import XFormSubmit
 from odk.utils import ManageFile
+from odk.openrosa.auth import openrosa_basic_auth
 
 LOG_DEBUG = logging.getLogger("mydebug")
 
@@ -28,6 +29,7 @@ class BaseOpenRosaResponse(HttpResponse):
 
 
 @csrf_exempt
+@openrosa_basic_auth
 def xform_submit(request, username=None):
     """
     Function used to manage the submissions and the responses. 
@@ -73,7 +75,8 @@ def xform_submit(request, username=None):
         # Building response with XML template and data dict
         response = BaseOpenRosaResponse(loader.get_template('submission.xml').render(data))
         response.status_code = status_code
+        return response
 
-    return response
+    return HttpResponseNotAllowed(['HEAD', 'POST'])
 
 

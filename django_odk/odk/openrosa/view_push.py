@@ -43,7 +43,7 @@ def rosa_detail(request, form_id):
     try:
         obj = XForm.objects.get(form_id=form_id)
     except XForm.DoesNotExist:
-        return Http404("XForm does not exist.")
+        raise Http404("XForm does not exist.")
 
     response = response_with_mimetype_and_name('xml', form_id, show_date=False)
     response.content = obj.xml_content

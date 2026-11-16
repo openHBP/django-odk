@@ -51,3 +51,6 @@ dist/
 django_odk.egg-info
 
 
+
+# Obsidian vault journal (local only)
+vault/Journal/

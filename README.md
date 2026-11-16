@@ -44,6 +44,11 @@ LANGUAGE_CODE = 'en'
 AUTH_USER_MODEL = 'auth.user'
 ```
 
+* (Recommended) Require authentication for ODK Collect submissions (`/odk/submission`). Credentials are those of a Django user, entered in ODK Collect under *Settings > Project settings > Server > Username / Password*. Serve the site over **HTTPS**: Basic auth sends the password in clear text.
+```py
+ODK_SUBMISSION_AUTH = True
+```
+
 * For a more interactive app, configure **logging** as explained in [Lincoln Loop](https://lincolnloop.com/blog/django-logging-right-way/) and **messages** as explained in [Django](https://docs.djangoproject.com/en/4.0/ref/contrib/messages/)
 
 * For **logging**, add `odk` and `odkdata` entry to `loggers` key of your logging file and adapt `handlers` according to yours.

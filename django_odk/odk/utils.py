@@ -4,6 +4,7 @@ import os
 import re
 import logging
 
+from django.utils.text import get_valid_filename
 from django.utils.timezone import now
 # Django
 from django.utils.translation import gettext as _
@@ -20,6 +21,22 @@ from odk.models import (
 
 LOG = logging.getLogger(__name__)
 LOG_DEBUG = logging.getLogger('mydebug')
+
+# form_id is attacker-controlled (parsed from the submitted XML) and is used
+# as a directory name: only allow a strict charset, never path separators.
+SAFE_FORM_ID = re.compile(r'^[A-Za-z0-9_\-\.]{1,100}$')
+
+
+def is_safe_form_id(form_id):
+    return bool(SAFE_FORM_ID.match(form_id or '')) and form_id not in ('.', '..')
+
+
+def safe_filename(name):
+    """
+    Reduce a client-supplied file name to a safe basename.
+    Raises SuspiciousFileOperation if nothing usable is left.
+    """
+    return get_valid_filename(os.path.basename(name or ''))
 
 
 def get_submitted_picture(xml_content, picture_tag):
@@ -82,7 +99,7 @@ class ManageFile(object):
             return 'OK'
         else:
             msg = _("File not found")
-            LOG.error = msg
+            LOG.error(msg)
             return msg
 
     def get_key_elements(self):
@@ -94,10 +111,19 @@ class ManageFile(object):
 
         if 'ERROR' in [self.form_id, self.version]:
             msg = _("Key elements (form_id - version) not found")
-            LOG.error = msg
-        else:
-            msg = 'OK'
-        return msg
+            LOG.error(msg)
+            return msg
+
+        if not is_safe_form_id(self.form_id):
+            LOG.warning("Rejected ODK submission with invalid form_id=%r", self.form_id)
+            return _("Invalid form_id")
+
+        # Only accept submissions for forms actually published on this server
+        if not XForm.objects.filter(form_id=self.form_id).exists():
+            LOG.warning("Rejected ODK submission for unknown form_id=%r", self.form_id)
+            return _("Unknown form_id")
+
+        return 'OK'
 
 
     @property
@@ -127,12 +153,15 @@ class ManageFile(object):
         """
         try:
             file_pointer = self.request.FILES[file_key]
+            filename = safe_filename(file_pointer.name)
             if class_name == "XFormSubmit":
-                self.xml_file = os.path.join(class_name, self.form_id, self.submitted_on, file_pointer.name)
+                if not is_safe_form_id(self.form_id):
+                    raise ValueError(f"Invalid form_id {self.form_id!r}")
+                self.xml_file = os.path.join(class_name, self.form_id, self.submitted_on, filename)
             else:
-                self.xml_file = os.path.join(class_name, file_pointer.name)
-            
-            self.xml_filename = file_pointer.name.replace('.xml', '')
+                self.xml_file = os.path.join(class_name, filename)
+
+            self.xml_filename = os.path.splitext(filename)[0]
             overwrite_storage.save(self.xml_file, file_pointer)
             msg = 'OK'
         except Exception as xcpt:
@@ -193,7 +222,7 @@ class ManageFile(object):
                         self.form_id,
                         self.submitted_on,
                         self.xml_filename,
-                        pic_pointer.name
+                        safe_filename(pic_pointer.name)
                     )
                     # LOG_DEBUG.debug(f"pic_path={pic_path}")
                     overwrite_storage.save(pic_path, pic_pointer)

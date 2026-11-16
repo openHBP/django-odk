@@ -12,6 +12,6 @@ Release logic:
  9. twine upload dist/*{new version}*
 """
 
-__version__ = "1.1.9"
+__version__ = "1.2.0"
 __author__ = 'Patrick HOUBEN'
 __credits__ = 'Walloon Agricultural Research Centre'

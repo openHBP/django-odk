@@ -105,3 +105,18 @@ Changes
 1.1.9 (2023-08-30)
 ------------------
 * install psycopg2-binary instead of psycopg2
+
+1.2.0 (2026-11-16)
+------------------
+* SECURITY: fix path traversal in /odk/submission. An anonymous POST with a crafted
+  ``<data id="../...">`` or file name could create, overwrite or delete files anywhere
+  under MEDIA_ROOT.
+
+  - form_id is validated against ``[A-Za-z0-9_.-]`` and must match an existing XForm
+  - uploaded file names (xml, pictures, xls) are reduced to a safe basename
+  - OverwriteStorage rejects '..' / absolute names before deleting the target file
+* Optional HTTP Basic auth for submissions: ``ODK_SUBMISSION_AUTH = True``
+* Login required for XForm list/detail (xls2xml, createmodel) and submitted file list
+* Fix ``LOG.error = msg`` overwriting the logger instead of logging
+* rosa_detail now raises Http404 instead of returning it
+* xform_submit returns 405 for methods other than HEAD/POST (was a 500)
