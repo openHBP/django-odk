@@ -2,11 +2,9 @@
 import os
 import logging
 
-from braces.views import LoginRequiredMixin
 # django modules
 from django.utils.translation import gettext as _
 from django.utils.timezone import now
-from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import render, redirect
@@ -15,6 +13,7 @@ from django.http import HttpResponseRedirect
 from django.utils.text import get_valid_filename
 # odk modules
 from .storage import overwrite_storage
+from .permissions import OdkPermissionMixin, odk_permission_required, check_odk_perm
 from .models import XForm, XFormSubmit, xform_path
 from .forms import OdkForm
 from .admin import xformsubmit_return_message, xformsubmit_error
@@ -52,8 +51,9 @@ class XFormTemplateView(generic.TemplateView):
         return context
 
 
-class XFormListView(LoginRequiredMixin, generic.ListView):
+class XFormListView(OdkPermissionMixin, generic.ListView):
     model = XForm
+    permission_required = 'odk.view_xform'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -61,13 +61,15 @@ class XFormListView(LoginRequiredMixin, generic.ListView):
         return context    
 
 
-class XFormDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
+class XFormDetailView(OdkPermissionMixin, OdkGenView, generic.DetailView):
     model = XForm
+    permission_required = 'odk.view_xform'
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()
 
         if 'xls2xml' in request.path:
+            check_odk_perm(request, 'odk.change_xform')
             obj.process_xform()
             obj.save()
             obj.set_xml_fields()
@@ -75,6 +77,8 @@ class XFormDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
             messages.success(request, _("XLSX successfully converted to XML XForm format."))
             return redirect(obj.get_absolute_url())
         if 'createmodel' in request.path:
+            # writes Python code into odkdata/models: superuser only
+            check_odk_perm(request, None)
             if create_model.process(obj):
                 model_name = create_model.rm_digit(obj.form_id).capitalize()
                 create_msg = _("created with success!")
@@ -89,7 +93,7 @@ class XFormDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
         return super().get(request, *args, **kwargs)
 
 
-@login_required(login_url='admin:login')
+@odk_permission_required('odk.add_xform')
 def xform_upload(request, pk=None):
     """Xform upload"""
     template = 'odk/xform_upload.html'
@@ -123,8 +127,9 @@ def xform_upload(request, pk=None):
     return render(request, template, context)
 
 
-class XFormDelView(LoginRequiredMixin, generic.DeleteView):
+class XFormDelView(OdkPermissionMixin, generic.DeleteView):
     model = XForm
+    permission_required = 'odk.delete_xform'
     template_name = "odk/xform_detail.html"
     confirm_message = _("Delete this form?")
     success_url = reverse_lazy("odk:xform_list")
@@ -149,13 +154,15 @@ class XFormDelView(LoginRequiredMixin, generic.DeleteView):
         return HttpResponseRedirect(self.success_url)
 
 
-class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
+class XFormSubmitDetailView(OdkPermissionMixin, OdkGenView, generic.DetailView):
     model = XFormSubmit
+    permission_required = 'odk.view_xformsubmit'
 
     def get(self, request, *args, **kwargs):
         obj = self.get_object()
 
         if 'loaddata/' in request.path:
+            check_odk_perm(request, 'odk.change_xformsubmit')
             ok_list = []
             ko_list = []
             return_value, message = load_submit_data.load_record(obj)
@@ -174,7 +181,7 @@ class XFormSubmitDetailView(LoginRequiredMixin, OdkGenView, generic.DetailView):
         return super().get(request, *args, **kwargs)   
 
 
-@login_required(login_url='admin:login')
+@odk_permission_required('odk.view_xformsubmit')
 def submittedfile_list(request):
     subpath = overwrite_storage.path("XFormSubmit")
     try:
@@ -199,18 +206,18 @@ def submittedfile_list(request):
     return render(request, 'odk/xformsubmit_list.html', context)
 
 
-class XFormSubmitDelView(LoginRequiredMixin, generic.DeleteView):
+class XFormSubmitDelView(OdkPermissionMixin, generic.DeleteView):
     model = XFormSubmit
+    permission_required = 'odk.delete_xformsubmit'
     template_name = "odk/xformsubmit_detail.html"
     confirm_message = _("Delete this submitted form?")
     success_url = reverse_lazy("odk:xformsubmit_list")
 
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         """
-        On delete rm file
+        On delete rm file (Django >= 4 DeleteView.post() calls form_valid, not delete)
         """
-        self.object = self.get_object()
-        
+        request = self.request
         filePath = self.object.xml_file.path
         try:
             os.remove(filePath) # rm xml
@@ -227,7 +234,8 @@ class XFormSubmitDelView(LoginRequiredMixin, generic.DeleteView):
                 # msg = f"Error {xcpt} while deleting picture {pic}"
                 # LOG.error(msg)
                 return render(request, "500.html", {"error_msg": xcpt})
-        os.rmdir(filePictureDir)
+        if os.path.isdir(filePictureDir):
+            os.rmdir(filePictureDir)
 
         success_url = self.get_success_url()
         self.object.delete()

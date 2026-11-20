@@ -120,3 +120,11 @@ Changes
 * Fix ``LOG.error = msg`` overwriting the logger instead of logging
 * rosa_detail now raises Http404 instead of returning it
 * xform_submit returns 405 for methods other than HEAD/POST (was a 500)
+
+1.2.2 (2026-11-20)
+----------
+* SECURITY: enforce authorization on all management views (IDOR / broken access control).
+  Any logged-in account could read any submission, delete any form or submission and upload forms.
+  Views now require superuser, a truthy ``user.is_odk_admin``, or the matching Django model
+  permission (``odk.view_/add_/change_/delete_xform[submit]``). CreateModel is superuser-only.
+* Fix XFormSubmit delete leaving xml/picture files on disk with Django >= 4 (``delete()`` -> ``form_valid()``).
