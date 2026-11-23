@@ -25,3 +25,16 @@ Bug annexe : `XFormSubmitDelView.delete()` jamais appelé avec Django ≥ 4 (`De
 ## Liens
 - [[2026-11-16-odk-submission-path-traversal]]
 - Dépendance non déclarée : `bs4` (importée par `odkdata/load_submit_data.py`, absente de `pyproject.toml`).
+
+## Suivi (même jour) : CSRF + OpenRosa
+- **CSRF** : `xls2xml`, `createmodel` (écrit du code Python) et `loaddata` s'exécutaient sur GET → un lien piégé suffisait à les faire déclencher par un admin connecté. Passés en POST (`post()` dans `XFormDetailView` / `XFormSubmitDetailView`, boutons → `<form method="post">` + `{% csrf_token %}`). GET sur ces URL → redirection vers le détail, sans effet.
+- **OpenRosa** : `formList/` et `form/<form_id>/` (`openrosa/view_push.py`) décorés `@openrosa_basic_auth`, même opt-in `ODK_SUBMISSION_AUTH` que `submission` (Collect envoie les mêmes identifiants).
+- Vérifié par un harnais Django jetable (scratchpad, hors dépôt) : 22 cas OK.
+
+## Re-signalement (2026-11-23)
+- Même rapport reçu à nouveau (centrespilotes.be : détail soumission lisible, suppression XForm/soumission, `POST /odk/add/` par un compte gratuit).
+- Harnais Django jetable (scratchpad) rejoué sur deux versions :
+  - **v1.2.1** (dernier tag) : vulnérable, rapport reproduit (200 sur détail, 302 + suppression effective sur delete/add).
+  - **arbre courant (fix 1.2.2, commit `62013b2`)** : 403 sur les 8 routes pour un compte sans rôle ; contrôle positif (`view_xformsubmit` → 200) et anonyme → login OK.
+- Conclusion : le site signalé tourne probablement en ≤ 1.2.1. 1.2.2 est commité mais **non tagué**. Il faut déployer ≥ 1.2.2.
+- Point à vérifier côté projet hôte : `user.is_odk_admin` ne doit pas être vrai pour un simple abonné, sinon le contrôle est contourné par conception.

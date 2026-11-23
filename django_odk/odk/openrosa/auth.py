@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-HTTP Basic authentication for OpenRosa endpoints (ODK Collect).
+HTTP Basic authentication for OpenRosa endpoints (ODK Collect):
+formList/, form/<form_id>/ and submission.
 
 Enable with, in settings.py:
     ODK_SUBMISSION_AUTH = True

@@ -36,7 +36,9 @@
             </form>
         {% else %}
             {% if not object.inserted_on %}
-                <a class="btn btn-success" href="{% url 'odk:xformsubmit_load' object.id %}">{% trans 'Insert' %}</a>
+                <form class="d-inline" action="{% url 'odk:xformsubmit_load' object.id %}" method="post">{% csrf_token %}
+                    <button type="submit" class="btn btn-success">{% trans 'Insert' %}</button>
+                </form>
             {% endif %}
             <a class="btn btn-primary" href="{% url 'odk:xformsubmit_del' object.id %}">{% trans 'Delete' %}</a>
         {% endif %}

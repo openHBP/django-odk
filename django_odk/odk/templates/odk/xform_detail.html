@@ -46,16 +46,16 @@ textarea {
     {% else %}
         <a class="btn btn-primary" href="{% url 'odk:xform_del' object.id %}">{% trans 'Delete' %}</a>
         {% if not object.xml_content %}
-            <p class="my-2">
-            <a class="btn btn-danger" href="{% url 'odk:xform_conv2xml' object.id %}">Convert2XML</a>
+            <form class="my-2" action="{% url 'odk:xform_conv2xml' object.id %}" method="post">{% csrf_token %}
+                <button type="submit" class="btn btn-danger">Convert2XML</button>
                 {% trans "Wait until the page is refreshed" %}
-            </p>
+            </form>
         {% else %}
             {% if not object.model_created_on %}
-                <p class="my-2">
-                    <a class="btn btn-success" href="{% url 'odk:xform_createmodel' object.id %}">CreateModel</a>
-                        {% trans "Wait until the page is refreshed" %}
-                </p>                
+                <form class="my-2" action="{% url 'odk:xform_createmodel' object.id %}" method="post">{% csrf_token %}
+                    <button type="submit" class="btn btn-success">CreateModel</button>
+                    {% trans "Wait until the page is refreshed" %}
+                </form>                
             {% endif %}
         {% endif %}
         <a class="btn btn-secondary" href="{% url 'odk:xform_list' %}">{% trans 'Back' %}</a>

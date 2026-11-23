@@ -9,7 +9,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.utils.text import get_valid_filename
 # odk modules
 from .storage import overwrite_storage
@@ -66,6 +66,13 @@ class XFormDetailView(OdkPermissionMixin, OdkGenView, generic.DetailView):
     permission_required = 'odk.view_xform'
 
     def get(self, request, *args, **kwargs):
+        # Side-effect actions are POST only (CSRF protected); a GET on their
+        # URL just shows the detail page.
+        if 'xls2xml' in request.path or 'createmodel' in request.path:
+            return redirect('odk:xform_detail', pk=kwargs['pk'])
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
         obj = self.get_object()
 
         if 'xls2xml' in request.path:
@@ -75,8 +82,7 @@ class XFormDetailView(OdkPermissionMixin, OdkGenView, generic.DetailView):
             obj.set_xml_fields()
             obj.save()
             messages.success(request, _("XLSX successfully converted to XML XForm format."))
-            return redirect(obj.get_absolute_url())
-        if 'createmodel' in request.path:
+        elif 'createmodel' in request.path:
             # writes Python code into odkdata/models: superuser only
             check_odk_perm(request, None)
             if create_model.process(obj):
@@ -86,11 +92,12 @@ class XFormDetailView(OdkPermissionMixin, OdkGenView, generic.DetailView):
                 messages.info(request, _("You can now run 'manage.py makemigrations odkdata' then 'manage.py migrate'."))
                 obj.model_created_on = now()
                 obj.save()
-                return redirect(obj.get_absolute_url())
             else:
                 messages.error(request, "Error while creating model, check your error logs.")
+        else:
+            return HttpResponseNotAllowed(['GET'])
 
-        return super().get(request, *args, **kwargs)
+        return redirect(obj.get_absolute_url())
 
 
 @odk_permission_required('odk.add_xform')
@@ -159,26 +166,32 @@ class XFormSubmitDetailView(OdkPermissionMixin, OdkGenView, generic.DetailView):
     permission_required = 'odk.view_xformsubmit'
 
     def get(self, request, *args, **kwargs):
-        obj = self.get_object()
-
+        # loaddata is POST only (CSRF protected); a GET just shows the detail page.
         if 'loaddata/' in request.path:
-            check_odk_perm(request, 'odk.change_xformsubmit')
-            ok_list = []
-            ko_list = []
-            return_value, message = load_submit_data.load_record(obj)
-            table_name = convert2camelcase(rm_digit(obj.form_id)).lower()
-            if return_value < 0:
-                xformsubmit_error(return_value, message, request, table_name)
-            else:
-                if return_value == 1:
-                    ok_list.append(obj.id)
-                    obj.inserted_on = now()
-                    obj.save()
-                else:
-                    ko_list.append(obj.id)
-                xformsubmit_return_message(ok_list, ko_list, message, request, table_name)
+            return redirect('odk:xformsubmit_detail', pk=kwargs['pk'])
+        return super().get(request, *args, **kwargs)
 
-        return super().get(request, *args, **kwargs)   
+    def post(self, request, *args, **kwargs):
+        if 'loaddata/' not in request.path:
+            return HttpResponseNotAllowed(['GET'])
+        obj = self.get_object()
+        check_odk_perm(request, 'odk.change_xformsubmit')
+        ok_list = []
+        ko_list = []
+        return_value, message = load_submit_data.load_record(obj)
+        table_name = convert2camelcase(rm_digit(obj.form_id)).lower()
+        if return_value < 0:
+            xformsubmit_error(return_value, message, request, table_name)
+        else:
+            if return_value == 1:
+                ok_list.append(obj.id)
+                obj.inserted_on = now()
+                obj.save()
+            else:
+                ko_list.append(obj.id)
+            xformsubmit_return_message(ok_list, ko_list, message, request, table_name)
+
+        return redirect('odk:xformsubmit_detail', pk=obj.pk)
 
 
 @odk_permission_required('odk.view_xformsubmit')

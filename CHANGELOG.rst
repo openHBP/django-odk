@@ -128,3 +128,9 @@ Changes
   Views now require superuser, a truthy ``user.is_odk_admin``, or the matching Django model
   permission (``odk.view_/add_/change_/delete_xform[submit]``). CreateModel is superuser-only.
 * Fix XFormSubmit delete leaving xml/picture files on disk with Django >= 4 (``delete()`` -> ``form_valid()``).
+
+1.2.3 (2026-11-23)
+----------
+* SECURITY (CSRF): xls2xml, createmodel and loaddata now run on POST only (CSRF protected);
+  a GET on their URL just redirects to the detail page. Buttons turned into forms with ``{% csrf_token %}``.
+* OpenRosa ``formList/`` and ``form/<form_id>/`` now honour ``ODK_SUBMISSION_AUTH`` (HTTP Basic), like ``submission``.

@@ -1,6 +1,6 @@
 [project]
 name = "django-odk"
-version = "1.2.2"
+version = "1.2.3"
 description = "Django Data Collection tool using ODK Collect mobile App"
 readme = "README.md"
 license = "GPL-3.0-or-later"

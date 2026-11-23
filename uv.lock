@@ -224,7 +224,7 @@ wheels = [
 
 [[package]]
 name = "django-odk"
-version = "1.2.0"
+version = "1.2.3"
 source = { editable = "." }
 dependencies = [
     { name = "django", version = "5.2.19", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },

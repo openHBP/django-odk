@@ -5,10 +5,12 @@ from django.utils import timezone
 
 from config.settings import USE_HTTPS
 from odk.models import XForm
+from odk.openrosa.auth import openrosa_basic_auth
 from odk.openrosa.utils_push import response_with_mimetype_and_name
 
 
 
+@openrosa_basic_auth
 def rosa_list(request):
     """
     This is where ODK Collect gets its download list.
@@ -36,6 +38,7 @@ def rosa_list(request):
     return response
 
 
+@openrosa_basic_auth
 def rosa_detail(request, form_id):
     """
     Download XForm XML view.
